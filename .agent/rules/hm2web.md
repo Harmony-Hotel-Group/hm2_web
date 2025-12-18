@@ -59,7 +59,7 @@ Genera un Grid con datos reales (corrige los errores de la web anterior):
 
 **E. Footer**
 * Datos reales: Calle Gran Colombia 2-07 y Manuel Vega, Cuenca.
-* Contacto: +593 980098757 | reservasmajestic2@hgchatnoir.com.
+* Contacto: +593 980098757 | reservas@hotelmajestic2.com
 * Copyright 2025.
 
 ### 5. Entregable Esperado

@@ -3,39 +3,110 @@ interface Props {
   title: string;
   price: number;
   image?: string;
+  description?: string;
+  category: 'estandar' | 'doble' | 'suite';
+  capacity: number;
+  size?: string;
   features: string[];
+  popular?: boolean;
 }
 
-const { title, price, image, features } = Astro.props;
+const { 
+  title, 
+  price, 
+  image, 
+  description, 
+  category, 
+  capacity, 
+  size,
+  features, 
+  popular = false 
+} = Astro.props;
+
+const categoryLabels: Record<string, string> = {
+  estandar: 'Estándar',
+  doble: 'Doble',
+  suite: 'Suite'
+};
 ---
 
-<div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-lg transition-shadow duration-300">
-  {image && (
-    <img 
-      src={image} 
-      alt={title} 
-      class="w-full h-48 object-cover"
-    />
-  )}
+<article class="card group">
+  <div class="relative overflow-hidden">
+    {image ? (
+      <img 
+        src={image} 
+        alt={title}
+        class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
+        loading="lazy"
+      />
+    ) : (
+      <div class="w-full h-56 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-primary/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+        </svg>
+      </div>
+    )}
+    
+    {popular && (
+      <div class="absolute top-4 left-4 bg-accent text-white text-sm font-bold px-3 py-1 rounded-full">
+        Popular
+      </div>
+    )}
+    
+    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+      <span class="text-white text-sm font-medium">{categoryLabels[category]}</span>
+    </div>
+  </div>
+
   <div class="p-6">
-    <div class="flex justify-between items-start">
-      <h3 class="text-xl font-bold text-primary font-serif">{title}</h3>
-      <span class="text-xl font-bold text-accent">${price}<span class="text-sm font-normal text-text/80">/noche</span></span>
+    <div class="flex justify-between items-start mb-2">
+      <h3 class="text-xl font-display font-bold text-primary">{title}</h3>
     </div>
     
-    <ul class="mt-4 space-y-2">
-      {features.map((feature) => (
-        <li class="flex items-center text-text/80">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent mr-2" viewBox="0 0 20 20" fill="currentColor">
+    {description && (
+      <p class="text-text-light text-sm mb-4 line-clamp-2">{description}</p>
+    )}
+    
+    <div class="flex items-center space-x-4 text-sm text-text-muted mb-4">
+      <span class="flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        {capacity} huéspedes
+      </span>
+      {size && (
+        <span class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          </svg>
+          {size}
+        </span>
+      )}
+    </div>
+
+    <ul class="space-y-2 mb-6">
+      {features.slice(0, 4).map((feature) => (
+        <li class="flex items-center text-sm text-text-light">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-accent mr-2 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
           </svg>
           {feature}
         </li>
       ))}
     </ul>
-    
-    <button class="mt-6 w-full bg-primary hover:bg-primary/90 text-white font-medium py-2 px-4 rounded-lg transition duration-300">
-      Reservar Ahora
-    </button>
+
+    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+      <div>
+        <span class="text-2xl font-display font-bold text-primary">${price}</span>
+        <span class="text-sm text-text-muted">/noche</span>
+      </div>
+      
+      <a 
+        href={`/habitaciones#${category}`}
+        class="btn-accent"
+      >
+        Reservar
+      </a>
+    </div>
   </div>
-</div>
+</article>

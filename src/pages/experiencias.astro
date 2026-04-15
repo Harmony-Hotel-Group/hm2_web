@@ -1,0 +1,187 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ExperienceCard from '../components/ExperienceCard.astro';
+
+const experiences = [
+  {
+    id: 'catedral',
+    title: 'Catedral de la Inmaculada Concepción',
+    description: 'El símbolo más icónico de Cuenca. Sus domos azules de hojalata brillan bajo el sol andino. La catedral neoclásica fue construida entre 1885 y 1975 y es una obra maestra de la arquitectura colonial.',
+    distance: '5 min caminando',
+    category: 'cultural'
+  },
+  {
+    id: 'parque',
+    title: 'Parque Calderón de Barca',
+    description: 'El corazón palpitante de la ciudad. Aquí encontrarás artistas locales, música en vivo los fines de semana, y la oportunidad de sumergirte en la vida cotidiana de los cucapeños.',
+    distance: '3 min caminando',
+    category: 'cultural'
+  },
+  {
+    id: 'pumapungo',
+    title: 'Museo y Parque Arqueológico Pumapungo',
+    description: 'Explora las ruinas del antiguo imperio Cañari. Este importante sitio arqueológico ofrece una ventana a la civilizations que habitó esta región antes de los incas.',
+    distance: '15 min caminando',
+    category: 'history'
+  },
+  {
+    id: 'mirador',
+    title: 'Mirador de Cullupamba',
+    description: 'Las mejores vistas panorámicas de Cuenca. Un lugar perfecto para fotografía y disfrutar del atardecer sobre la ciudad colonial.',
+    distance: '20 min en taxi',
+    category: 'nature'
+  },
+  {
+    id: 'cajas',
+    title: 'Parque Nacional Cajas',
+    description: 'A solo 30 minutos del centro, este parque nacional ofrece lagunas crystalinas, trekkimg de alta montaña y paisajes andinos increíboles.',
+    distance: '45 min',
+    category: 'nature'
+  },
+  {
+    id: 'gualaceo',
+    title: 'Gualaceo - Pueblo Artesanal',
+    description: 'Famoso por su tejido en tagua (marfil vegetal) y productos artesanales. Un viaje de día perfecto para conocer la arteanía local.',
+    distance: '1 hora',
+    category: 'cultural'
+  }
+];
+
+const categories = [
+  { id: 'all', label: 'Todos' },
+  { id: 'cultural', label: 'Cultural' },
+  { id: 'history', label: 'Historia' },
+  { id: 'nature', label: 'Naturaleza' }
+];
+---
+
+<Layout title="Experiencias">
+  <!-- Hero -->
+  <section class="relative h-64 md:h-80 flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img 
+        src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1920&q=80" 
+        alt="Experiencias en Cuenca"
+        class="w-full h-full object-cover"
+      />
+      <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40"></div>
+    </div>
+    <div class="relative z-10 text-center px-4">
+      <h1 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">Experiencias</h1>
+      <p class="text-white/90 text-lg max-w-2xl mx-auto">Descubre lo mejor de Cuenca y sus alrededores</p>
+    </div>
+  </section>
+
+  <!-- Filter -->
+  <div class="bg-white border-b border-gray-100 sticky top-20 z-30">
+    <div class="max-w-7xl mx-auto px-4 py-4">
+      <div class="flex items-center justify-center space-x-4">
+        {categories.map((cat) => (
+          <button class:list={[
+            'filter-btn px-6 py-2 rounded-full font-medium transition-colors',
+            cat.id === 'all' ? 'bg-primary text-white' : 'border border-primary text-primary hover:bg-primary hover:text-white'
+          ]} data-filter={cat.id}>
+            {cat.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Experiences Grid -->
+  <section class="py-16 bg-background">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {experiences.map((exp) => (
+          <article class="experience-card card group" data-category={exp.category}>
+            <div class="relative overflow-hidden rounded-t-xl">
+              <div class="w-full h-64 bg-gradient-to-br from-primary/30 to-accent/30 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-primary/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div class="absolute top-4 right-4">
+                <span class="bg-accent text-white text-xs font-bold px-3 py-1 rounded-full">
+                  {exp.distance}
+                </span>
+              </div>
+            </div>
+            <div class="p-6">
+              <span class="text-xs text-accent font-medium uppercase tracking-wider">{exp.category}</span>
+              <h3 class="font-display text-xl font-bold text-primary mt-1 mb-2">{exp.title}</h3>
+              <p class="text-text-light text-sm">{exp.description}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Map Section -->
+  <section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="section-title mb-4">En el Corazón de Cuenca</h2>
+      <p class="text-text-light mb-8">
+        Nuestro hotel está estratégicamente ubicado para que puedas explorar las principales atracciones a pie.
+      </p>
+      <div class="aspect-video rounded-xl overflow-hidden shadow-lg">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3980.920510961731!2d-79.0107346251304!3d-2.8972745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91cd19b08bbe4bff%3A0xe7258e2651680854!2sHotel%20Majestic%202%20by%20HHG!5e0!3m2!1sen!2sec!4v1650000000000!5m2!1sen!2sec" 
+          width="100%" 
+          height="100%" 
+          style="border:0;" 
+          allowfullscreen="" 
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tours CTA -->
+  <section class="py-16 bg-accent">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10a10 10 0 0114 0M3 10a10 10 0 0114 0M3 10a10 10 0 0114 0M3 10a10 10 0 0114 0" />
+      </svg>
+      <h2 class="font-display text-2xl font-bold text-white mb-2">¿Necesitas ayuda para planificar?</h2>
+      <p class="text-white/90 mb-6">
+        Podemos ayudarte a organizar tours guiados y transporte.
+      </p>
+      <a href="https://wa.me/593980098757?text=Hola,%20me%20interesa%20información%20sobre%20tours%20en%20Cuenca" target="_blank" class="inline-flex items-center bg-white text-accent hover:bg-gray-100 font-bold py-3 px-6 rounded-lg transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        Consultar Tours
+      </a>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.experience-card');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.getAttribute('data-filter');
+      
+      filterBtns.forEach(b => {
+        b.classList.remove('bg-primary', 'text-white');
+        b.classList.add('border', 'border-primary', 'text-primary');
+      });
+      btn.classList.add('bg-primary', 'text-white');
+      btn.classList.remove('border', 'border-primary', 'text-primary');
+      
+      cards.forEach(card => {
+        const category = card.getAttribute('data-category');
+        if (filter === 'all' || category === filter) {
+          (card as HTMLElement).style.display = 'block';
+        } else {
+          (card as HTMLElement).style.display = 'none';
+        }
+      });
+    });
+  });
+</script>

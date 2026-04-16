@@ -1,0 +1,18 @@
+{
+  "extends": "./.astro/types.d.ts",
+  "compilerOptions": {
+    "paths": {
+      "@components/*": ["./src/components/*"],
+      "@organisms/*": ["./src/components/organisms/*"],
+      "@molecules/*": ["./src/components/molecules/*"],
+      "@atoms/*": ["./src/components/atoms/*"],
+      "@templates/*": ["./src/components/templates/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@layouts/*": ["./src/layouts/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@data/*": ["./src/data/*"]
+    }
+  }
+}

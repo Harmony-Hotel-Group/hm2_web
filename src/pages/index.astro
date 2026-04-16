@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import BookingForm from '../components/BookingForm.astro';
+import BookingBar from '../components/BookingBar.astro';
 import RoomCard from '../components/RoomCard.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
 import ExperienceCard from '../components/ExperienceCard.astro';
@@ -24,7 +25,8 @@ import ExperienceCard from '../components/ExperienceCard.astro';
       <div class="max-w-4xl mx-auto text-center">
         <div class="animate-fade-in">
           <span class="inline-block text-accent font-accent text-xl md:text-2xl mb-4 tracking-widest uppercase">
-            Hospitality & Hotels Group
+            Hospitality & Hotels Group <br>
+            Harmony Hotel Group
           </span>
         </div>
         
@@ -55,6 +57,7 @@ import ExperienceCard from '../components/ExperienceCard.astro';
     <div class="relative z-10 pb-8 px-4">
       <div class="max-w-4xl mx-auto animate-slide-up animate-delay-200">
         <BookingForm variant="hero" />
+        <BookingBar />
       </div>
     </div>
 

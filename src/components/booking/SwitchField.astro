@@ -1,0 +1,108 @@
+---
+interface Props {
+  id: string;
+  name: string;
+  label: string;
+  description?: string;
+  checked?: boolean;
+  defaultChecked?: boolean;
+}
+
+const { id, name, label, description, checked, defaultChecked } = Astro.props;
+---
+
+<div class="switch-wrapper">
+  <label class="switch-label" for={id}>
+    <input 
+      type="checkbox" 
+      id={id} 
+      name={name}
+      checked={checked ?? defaultChecked}
+      class="switch-input"
+    />
+    <span class="switch-toggle"></span>
+    <span class="switch-text">
+      <span class="switch-title">{label}</span>
+      {description && <span class="switch-description">{description}</span>}
+    </span>
+  </label>
+</div>
+
+<style>
+  .switch-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d1d5db;
+    background-color: #ffffff;
+    border-radius: 0.625rem;
+    padding: 0.45rem 0.6rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .switch-wrapper:has(.switch-input:focus-visible) {
+    border-color: #b8860b;
+    box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.15);
+  }
+
+  .switch-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .switch-input {
+    display: none;
+  }
+
+  .switch-toggle {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    background-color: #cbd5e1;
+    border-radius: 9999px;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    flex-shrink: 0;
+  }
+
+  .switch-toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background-color: white;
+    border-radius: 9999px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .switch-input:checked + .switch-toggle {
+    background-color: #b8860b;
+    box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.2);
+  }
+
+  .switch-input:checked + .switch-toggle::after {
+    transform: translateX(16px);
+  }
+
+  .switch-text {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    line-height: 1.1;
+  }
+
+  .switch-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+  }
+
+  .switch-description {
+    font-size: 11px;
+    color: #111827;
+    margin-top: 0.1rem;
+  }
+</style>

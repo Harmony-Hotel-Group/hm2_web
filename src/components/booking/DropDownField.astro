@@ -1,0 +1,22 @@
+---
+interface Props {
+  id: string;
+  name: string;
+  label: string;
+  options: { value: string; label: string }[];
+  defaultValue?: string;
+}
+
+const { id, name, label, options, defaultValue } = Astro.props;
+---
+
+<div class="form-group">
+  <label class="label" for={id}>{label}</label>
+  <select id={id} name={name} class="input-field" data-default={defaultValue}>
+    {options.map((option) => (
+      <option value={option.value} selected={option.value === defaultValue}>
+        {option.label}
+      </option>
+    ))}
+  </select>
+</div>

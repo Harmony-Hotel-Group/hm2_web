@@ -1,0 +1,627 @@
+---
+import DateRangePickerField from './DateRangePickerField.astro';
+import BookingVehicleSection from './BookingVehicleSection.astro';
+import SwitchField from './SwitchField.astro';
+import { range } from "../../utils/math";
+
+interface Props {
+  lang?: string;
+  variant?: 'hero' | 'page';
+}
+
+const { lang = 'es', variant = 'hero' } = Astro.props;
+
+const adultsOptions = range(1, 8).map((i, index, array) => {
+	if (index === array.length - 1) {
+		return {
+			value: "group",
+			label: `Grupo (${i}+ adultos)`
+		};
+	}
+	return {
+		value: `${i}`,
+		label: `${i} adulto${i > 1 ? 's' : ''}`,
+	};
+});
+
+const childrenOptions = range(1, 8).map((i) => ({
+  value: `${i}`,
+  label: `${i} niño${i > 1 ? 's' : ''}`
+}));
+
+const roomsOptions = range(1, 7).map((i) => ({
+  value: `${i}`,
+  label: `${i} habitación${i > 1 ? 'es' : ''}`
+}));
+
+const distributionTypes = [
+  { value: 'shared_beds', label: 'Camas compartidas' },
+  { value: 'shared_rooms', label: 'Habitaciones compartidas' },
+  { value: 'individual_rooms', label: 'Habitaciones individuales' }
+];
+
+const fieldControlClass =
+  'w-full h-[42px] px-3 py-2.5 text-sm text-black border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all bg-white';
+---
+
+<form 
+  id="booking-form" 
+  method="POST" 
+  action="/api/booking"
+  class:list={[
+    'booking-form',
+    variant === 'hero' ? 'bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-4 md:p-5' : 'bg-white rounded-xl shadow-lg border border-gray-100 p-6'
+  ]}
+  data-lang={lang}
+>
+  <input type="hidden" name="csrf_token" value="" />
+  <input type="hidden" name="mode" id="form-mode" value="standard" />
+
+  <!-- Standard Mode Fields -->
+  <div id="standard-fields">
+    <div class:list={[
+      'grid gap-3',
+      variant === 'hero' ? 'grid-cols-2 md:grid-cols-5' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-5'
+    ]}>
+      <div class="md:col-span-2">
+        <DateRangePickerField
+          id="booking-date-range"
+          label="Ingreso y salida"
+          placeholder="Selecciona ingreso y salida"
+          checkinName="checkin"
+          checkoutName="checkout"
+          lang={lang === 'es' ? 'es' : 'en'}
+          required={true}
+        />
+      </div>
+
+      <!-- Adults -->
+      <div class="form-group">
+        <label class="text-xs font-medium text-black mb-1" for="adults">Adultos</label>
+        <select 
+          id="adults" 
+          name="adults"
+          class={fieldControlClass}
+        >
+          {adultsOptions.map((opt) => (
+            <option value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      </div>
+
+      <!-- Children -->
+      <div class="form-group">
+        <label class="text-xs font-medium text-black mb-1" for="children">Niños</label>
+        <select 
+          id="children" 
+          name="children"
+          class={fieldControlClass}
+        >
+          {childrenOptions.map((opt) => (
+            <option value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      </div>
+
+      <!-- Rooms -->
+      <div class="form-group">
+        <label class="text-xs font-medium text-black mb-1" for="rooms">Habitaciones</label>
+        <select 
+          id="rooms" 
+          name="rooms"
+          class={fieldControlClass}
+        >
+          {roomsOptions.map((opt) => (
+            <option value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+    <div id="children-ages-section" class="hidden mt-3 p-3 bg-gray-50 rounded-lg border border-gray-500">
+      <h5 class="text-sm font-semibold text-black mb-2">Edad de cada niño</h5>
+      <div id="children-ages-list" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2"></div>
+      <p id="children-ages-info" class="hidden mt-2 text-xs text-black"></p>
+    </div>
+  </div>
+
+  <!-- Group Mode Fields (hidden by default) -->
+  <div id="group-fields" class="hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-400">
+    <div class="flex items-center justify-between mb-3">
+      <h4 class="text-sm font-semibold text-black">Reserva Grupal (mínimo 8 adultos)</h4>
+      <button
+        type="button"
+        id="btn-cancel-group"
+        class="text-xs font-medium text-red-600 hover:text-red-700 transition-colors"
+      >
+        Salir de grupo
+      </button>
+    </div>
+    <div class="mb-3">
+      <DateRangePickerField
+        id="booking-date-range-group"
+        label="Ingreso y salida (grupo)"
+        placeholder="Selecciona ingreso y salida"
+        checkinName="group_checkin"
+        checkoutName="group_checkout"
+        lang={lang === 'es' ? 'es' : 'en'}
+        required={false}
+      />
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="form-group">
+        <label class="text-xs font-medium text-black mb-1" for="group-adults">Adultos</label>
+        <input 
+          type="number" 
+          id="group-adults" 
+          name="groupAdults"
+          min="8"
+          max="50"
+          value="8"
+          class={fieldControlClass}
+        />
+      </div>
+      <div class="form-group">
+        <label class="text-xs font-medium text-black mb-1" for="group-teens">Adolescentes</label>
+        <input 
+          type="number" 
+          id="group-teens" 
+          name="groupTeens"
+          min="0"
+          max="20"
+          value="0"
+          class={fieldControlClass}
+        />
+      </div>
+      <div class="form-group">
+        <label class="text-xs font-medium text-black mb-1" for="group-kids">Niños</label>
+        <input 
+          type="number" 
+          id="group-kids" 
+          name="groupKids"
+          min="0"
+          max="15"
+          value="0"
+          class={fieldControlClass}
+        />
+      </div>
+      <div class="form-group">
+        <label class="text-xs font-medium text-black mb-1" for="group-infants">Bebés</label>
+        <input 
+          type="number" 
+          id="group-infants" 
+          name="groupInfants"
+          min="0"
+          max="10"
+          value="0"
+          class={fieldControlClass}
+        />
+      </div>
+    </div>
+    <div class="form-group mt-3">
+      <label class="text-xs font-medium text-black mb-1" for="distribution-type">Tipo de distribución</label>
+      <select 
+        id="distribution-type" 
+        name="distributionType"
+        class={fieldControlClass}
+      >
+        {distributionTypes.map((type) => (
+          <option value={type.value}>{type.label}</option>
+        ))}
+      </select>
+    </div>
+  </div>
+
+  <!-- Extras -->
+  <div id="extras-row" class="hidden mt-4 pt-4 border-t border-gray-200">
+    <div class="flex flex-wrap items-center gap-3">
+      <h4 class="text-sm font-semibold text-black mr-1">Extras y preferencias</h4>
+      <div class="w-full md:flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <SwitchField
+          id="breakfast-toggle"
+          name="breakfast"
+          label="Desayuno"
+          description="Agregar desayuno a la reserva"
+        />
+        <SwitchField
+          id="parking-toggle"
+          name="parking"
+          label="Parking"
+          description="Incluir espacio de estacionamiento"
+        />
+        <SwitchField
+          id="special-request-toggle"
+          name="special_request_enabled"
+          label="Solicitudes especiales"
+          description="Deseo dejar una nota"
+        />
+      </div>
+    </div>
+    <div id="special-request-section" class="hidden mt-3">
+      <label class="text-xs font-medium text-black mb-1" for="special-requests">Nota especial</label>
+      <textarea
+        id="special-requests"
+        name="special_requests"
+        rows="2"
+        class="w-full px-3 py-2 text-sm text-black border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all resize-none bg-white placeholder:text-gray-700"
+        placeholder="Cuéntanos si necesitas algo en particular..."
+      ></textarea>
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <BookingVehicleSection id="vehicle-section" />
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" class="mt-3 w-full bg-accent hover:bg-accent-dark text-white font-bold py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+    <span class="text-sm">Ver disponibilidad</span>
+  </button>
+
+</form>
+
+<script>
+  const form = document.getElementById('booking-form') as HTMLFormElement;
+  const adultsSelect = document.getElementById('adults') as HTMLSelectElement;
+  const childrenSelect = document.getElementById('children') as HTMLSelectElement;
+  const formModeInput = document.getElementById('form-mode') as HTMLInputElement;
+  const standardFields = document.getElementById('standard-fields');
+  const groupFields = document.getElementById('group-fields');
+  const childrenAgesSection = document.getElementById('children-ages-section');
+  const childrenAgesList = document.getElementById('children-ages-list');
+  const childrenAgesInfo = document.getElementById('children-ages-info');
+  const extrasRow = document.getElementById('extras-row');
+  const cancelGroupBtn = document.getElementById('btn-cancel-group');
+  const parkingToggle = document.getElementById('parking-toggle') as HTMLInputElement | null;
+  const vehicleSection = document.getElementById('vehicle-section');
+  const specialRequestToggle = document.getElementById('special-request-toggle') as HTMLInputElement | null;
+  const specialRequestSection = document.getElementById('special-request-section');
+  const specialRequestsInput = document.getElementById('special-requests') as HTMLTextAreaElement | null;
+
+  const groupThreshold = 8;
+  const standardDateRangeId = 'booking-date-range';
+  const groupDateRangeId = 'booking-date-range-group';
+
+  const getDatePairByRangeId = (rangeId: string) => {
+    const checkin = document.querySelector(
+      `[data-checkin-hidden="${rangeId}"]`
+    ) as HTMLInputElement | null;
+    const checkout = document.querySelector(
+      `[data-checkout-hidden="${rangeId}"]`
+    ) as HTMLInputElement | null;
+    return { checkin, checkout };
+  };
+
+  const hasSelectedDateRange = () => {
+    const mode = formModeInput.value;
+    const activeRangeId = mode === 'group' ? groupDateRangeId : standardDateRangeId;
+    const active = getDatePairByRangeId(activeRangeId);
+    return Boolean(active.checkin?.value && active.checkout?.value);
+  };
+
+  const syncExtrasVisibility = () => {
+    const visible = hasSelectedDateRange();
+    extrasRow?.classList.toggle('hidden', !visible);
+
+    if (!visible) {
+      if (specialRequestSection) specialRequestSection.classList.add('hidden');
+      if (vehicleSection) vehicleSection.classList.add('hidden');
+    } else if (specialRequestToggle && specialRequestSection) {
+      specialRequestSection.classList.toggle('hidden', !specialRequestToggle.checked);
+    }
+
+    if (parkingToggle && vehicleSection && visible) {
+      vehicleSection.classList.toggle('hidden', !parkingToggle.checked);
+    }
+  };
+
+  const syncDateRangeValues = (sourceRangeId: string, targetRangeId: string) => {
+    const source = getDatePairByRangeId(sourceRangeId);
+    const target = getDatePairByRangeId(targetRangeId);
+    const targetVisibleInput = document.getElementById(targetRangeId) as HTMLInputElement | null;
+    const sourceVisibleInput = document.getElementById(sourceRangeId) as HTMLInputElement | null;
+    if (!source.checkin || !source.checkout || !target.checkin || !target.checkout) return;
+    if (!source.checkin.value || !source.checkout.value) return;
+
+    target.checkin.value = source.checkin.value;
+    target.checkout.value = source.checkout.value;
+    if (targetVisibleInput && sourceVisibleInput) {
+      targetVisibleInput.value = sourceVisibleInput.value;
+    }
+  };
+
+  const updateChildrenAgesMessages = () => {
+    if (!childrenAgesList || !childrenAgesInfo) return;
+    const ageInputs = Array.from(
+      childrenAgesList.querySelectorAll('[data-child-age-input]')
+    ) as HTMLInputElement[];
+
+    let hasFullFareChild = false;
+    ageInputs.forEach((input) => {
+      const age = Number(input.value);
+      const warning = childrenAgesList.querySelector(
+        `[data-child-age-warning="${input.name}"]`
+      ) as HTMLParagraphElement | null;
+
+      if (!Number.isNaN(age) && age >= 12) {
+        hasFullFareChild = true;
+        if (warning) {
+          warning.textContent = '12 años o más: aplica tarifa completa.';
+          warning.classList.remove('hidden');
+        }
+      } else if (warning) {
+        warning.textContent = '';
+        warning.classList.add('hidden');
+      }
+    });
+
+    if (ageInputs.length === 0) {
+      childrenAgesInfo.classList.add('hidden');
+      childrenAgesInfo.textContent = '';
+      return;
+    }
+
+    if (!hasFullFareChild) {
+      childrenAgesInfo.textContent =
+        'Menores de 12 años, se debe presentar cédula de identificación o pasaporte al registrar.';
+      childrenAgesInfo.classList.remove('hidden');
+    } else {
+      childrenAgesInfo.classList.add('hidden');
+      childrenAgesInfo.textContent = '';
+    }
+  };
+
+  const renderChildrenAgeInputs = () => {
+    if (!childrenSelect || !childrenAgesSection || !childrenAgesList) return;
+    const count = parseInt(childrenSelect.value, 10) || 0;
+
+    const existingAges = new Map<number, string>();
+    childrenAgesList.querySelectorAll('[data-child-age-input]').forEach((input) => {
+      const htmlInput = input as HTMLInputElement;
+      const idxMatch = htmlInput.name.match(/^child_age_(\d+)$/);
+      if (idxMatch) {
+        existingAges.set(Number(idxMatch[1]), htmlInput.value);
+      }
+    });
+
+    childrenAgesList.innerHTML = '';
+
+    if (count <= 0) {
+      childrenAgesSection.classList.add('hidden');
+      if (childrenAgesInfo) {
+        childrenAgesInfo.classList.add('hidden');
+        childrenAgesInfo.textContent = '';
+      }
+      return;
+    }
+
+    childrenAgesSection.classList.remove('hidden');
+
+    for (let i = 1; i <= count; i++) {
+      const field = document.createElement('div');
+      field.className = 'rounded-md border border-gray-500 bg-white p-2';
+      field.innerHTML = `
+        <label for="child-age-${i}" class="block text-xs font-medium text-black mb-1">Niño ${i}: edad</label>
+        <input
+          id="child-age-${i}"
+          name="child_age_${i}"
+          type="number"
+          min="0"
+          max="17"
+          class="w-full h-[42px] px-3 py-2 text-sm text-black border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all bg-white"
+          data-child-age-input
+        />
+        <p class="hidden mt-1 text-xs text-red-700" data-child-age-warning="child_age_${i}"></p>
+      `;
+      childrenAgesList.appendChild(field);
+
+      const restoredValue = existingAges.get(i);
+      const input = field.querySelector('[data-child-age-input]') as HTMLInputElement | null;
+      if (input && typeof restoredValue === 'string') {
+        input.value = restoredValue;
+      }
+    }
+
+    childrenAgesList.querySelectorAll('[data-child-age-input]').forEach((input) => {
+      input.addEventListener('input', updateChildrenAgesMessages);
+    });
+
+    updateChildrenAgesMessages();
+  };
+
+  const setGroupMode = (enabled: boolean) => {
+    const wasGroupMode = formModeInput.value === 'group';
+    if (enabled === wasGroupMode) return;
+
+    formModeInput.value = enabled ? 'group' : 'standard';
+    groupFields?.classList.toggle('hidden', !enabled);
+    standardFields?.classList.toggle('hidden', enabled);
+    if (enabled) {
+      syncDateRangeValues(standardDateRangeId, groupDateRangeId);
+      childrenAgesSection?.classList.add('hidden');
+    } else {
+      syncDateRangeValues(groupDateRangeId, standardDateRangeId);
+      if (adultsSelect) adultsSelect.value = '2';
+      renderChildrenAgeInputs();
+    }
+    syncExtrasVisibility();
+  };
+
+  if (specialRequestToggle && specialRequestSection) {
+    const syncSpecialRequestVisibility = () => {
+      const enabled = specialRequestToggle.checked;
+      specialRequestSection.classList.toggle('hidden', !enabled);
+      if (!enabled && specialRequestsInput) {
+        specialRequestsInput.value = '';
+      }
+    };
+    specialRequestToggle.addEventListener('change', syncSpecialRequestVisibility);
+    syncSpecialRequestVisibility();
+  }
+
+  if (parkingToggle && vehicleSection) {
+    const syncVehicleVisibility = () => {
+      if (extrasRow?.classList.contains('hidden')) {
+        vehicleSection.classList.add('hidden');
+        return;
+      }
+      vehicleSection.classList.toggle('hidden', !parkingToggle.checked);
+    };
+    parkingToggle.addEventListener('change', syncVehicleVisibility);
+    syncVehicleVisibility();
+  }
+
+  adultsSelect?.addEventListener('change', () => {
+    setGroupMode(adultsSelect.value === 'group');
+  });
+  childrenSelect?.addEventListener('change', renderChildrenAgeInputs);
+
+  cancelGroupBtn?.addEventListener('click', () => {
+    setGroupMode(false);
+  });
+
+  form?.addEventListener('date-range:change', syncExtrasVisibility);
+  syncExtrasVisibility();
+  renderChildrenAgeInputs();
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(form);
+    const mode = formModeInput.value;
+    
+    if (mode === 'group') {
+      const groupAdults = parseInt(formData.get('groupAdults') as string) || 0;
+      if (groupAdults < groupThreshold) {
+        alert(`Para reservas grupales se requieren mínimo ${groupThreshold} adultos`);
+        return;
+      }
+    } else {
+      const childrenCount = parseInt((formData.get('children') as string) || '0', 10) || 0;
+      const childAges: number[] = [];
+      for (let i = 1; i <= childrenCount; i++) {
+        const rawAge = formData.get(`child_age_${i}`) as string | null;
+        if (!rawAge || rawAge.trim() === '') {
+          alert(`Debes ingresar la edad del niño ${i}.`);
+          return;
+        }
+        const age = Number(rawAge);
+        if (Number.isNaN(age) || age < 0 || age > 17) {
+          alert(`La edad del niño ${i} debe estar entre 0 y 17 años.`);
+          return;
+        }
+        childAges.push(age);
+      }
+      formData.set('children_ages_summary', childAges.join(', '));
+    }
+
+    const groupCheckin = formData.get('group_checkin') as string | null;
+    const groupCheckout = formData.get('group_checkout') as string | null;
+    const checkin = mode === 'group' ? (groupCheckin || (formData.get('checkin') as string | null)) : (formData.get('checkin') as string | null);
+    const checkout = mode === 'group' ? (groupCheckout || (formData.get('checkout') as string | null)) : (formData.get('checkout') as string | null);
+    if (!checkin || !checkout) {
+      alert('Selecciona una fecha de ingreso y salida válida.');
+      return;
+    }
+
+    const specialRequestEnabled = formData.get('special_request_enabled');
+    const specialRequestText = (formData.get('special_requests') as string | null)?.trim() || '';
+
+    const data: Record<string, any> = {
+      mode,
+      checkin,
+      checkout,
+      breakfast: formData.get('breakfast') ? 'Sí' : 'No',
+      parking: formData.get('parking') ? 'Sí' : 'No',
+      special_request: specialRequestEnabled ? (specialRequestText || 'Sin detalle') : 'Ninguna'
+    };
+
+    const vehicleMap = new Map<number, { type?: string; plate?: string }>();
+    for (const [key, value] of formData.entries()) {
+      const typeMatch = key.match(/^vehicleType(\d+)$/);
+      if (typeMatch) {
+        const idx = Number(typeMatch[1]);
+        vehicleMap.set(idx, { ...(vehicleMap.get(idx) || {}), type: String(value) });
+      }
+      const plateMatch = key.match(/^vehiclePlate(\d+)$/);
+      if (plateMatch) {
+        const idx = Number(plateMatch[1]);
+        vehicleMap.set(idx, { ...(vehicleMap.get(idx) || {}), plate: String(value).toUpperCase() });
+      }
+    }
+    data.vehicles = Array.from(vehicleMap.values()).filter((v) => (v.type && v.type.trim()) || (v.plate && v.plate.trim()));
+
+    if (mode === 'standard') {
+      data.adults = formData.get('adults');
+      data.children = formData.get('children');
+      data.rooms = formData.get('rooms');
+      const agesSummary = (formData.get('children_ages_summary') as string | null)?.trim() || '';
+      if (agesSummary) {
+        const ages = agesSummary
+          .split(',')
+          .map((age) => Number(age.trim()))
+          .filter((age) => !Number.isNaN(age));
+        data.childrenAges = ages;
+        const adultsBase = parseInt(String(data.adults), 10) || 0;
+        const fullFareChildrenCount = ages.filter((age) => age >= 12).length;
+        const minorChildrenCount = ages.filter((age) => age < 12).length;
+
+        data.adultsBase = adultsBase;
+        data.fullFareChildrenCount = fullFareChildrenCount;
+        data.minorChildrenCount = minorChildrenCount;
+        data.totalBillableAdults = adultsBase + fullFareChildrenCount;
+
+        data.childrenPolicyNote = ages.length > 0 && ages.every((age) => age < 12)
+          ? 'Menores de 12 años, se debe presentar cédula de identificación o pasaporte al registrar.'
+          : '';
+      }
+    } else {
+      data.groupAdults = formData.get('groupAdults');
+      data.groupTeens = formData.get('groupTeens');
+      data.groupKids = formData.get('groupKids');
+      data.groupInfants = formData.get('groupInfants');
+      data.distributionType = formData.get('distributionType');
+      data.groupNotes = formData.get('special_requests') || '';
+    }
+
+    const checkIn = new Date(data.checkin as string);
+    const checkOut = new Date(data.checkout as string);
+    const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
+
+    let message = `*¡Hola! Me interesa reservar en Hotel Majestic II.*%0A%0A📅 *Check-in:* ${data.checkin}%0A📅 *Check-out:* ${data.checkout}%0A Alojamiento: (${nights} noche${nights > 1 ? 's' : ''})%0A`;
+
+    if (mode === 'standard') {
+      const adultsForMessage = data.totalBillableAdults ?? data.adults;
+      const childrenForMessage = data.minorChildrenCount ?? data.children;
+      message += `🛏️ *Adultos (cobrables):* ${adultsForMessage} | *Niños:* ${childrenForMessage} | *Habitaciones:* ${data.rooms}%0A`;
+      if (typeof data.fullFareChildrenCount === 'number' && data.fullFareChildrenCount > 0) {
+        message += `💳 *Tarifa completa por edad:* ${data.fullFareChildrenCount} niño(s) de 12+ se suma(n) a adultos.%0A`;
+      }
+      if (data.childrenAges && data.childrenAges.length > 0) {
+        message += `👶 *Edades niños:* ${data.childrenAges.filter((age: number) => age < 12).join(', ')}%0A`;
+      }
+      if (data.childrenPolicyNote) {
+        message += `🪪 *Documento:* ${data.childrenPolicyNote}%0A`;
+      }
+    } else {
+      message += `👥 *Grupo:* ${data.groupAdults} adultos, ${data.groupTeens} adolescentes, ${data.groupKids} niños, ${data.groupInfants} bebés%0A🏠 *Distribución:* ${data.distributionType}%0A`;
+    }
+
+    message += `%0A🏷️ *Extras:*%0A   Desayuno: ${data.breakfast}%0A   Parking: ${data.parking}%0A`;
+
+    if (data.parking === 'Sí' && data.vehicles.length > 0) {
+      message += `%0A🚗 *Vehículos:*`;
+      data.vehicles.forEach((vehicle: { type?: string; plate?: string }, index: number) => {
+        const type = vehicle.type || 'No especificado';
+        const plate = vehicle.plate || 'Sin placa';
+        message += `%0A   ${index + 1}. ${type} - ${plate}`;
+      });
+    }
+
+    message += `%0A%0A📝 *Notas:* ${data.special_request}%0A%0APor favor confirmar disponibilidad y tarifa.`;
+
+    window.open(`https://wa.me/593980098757?text=${message}`, '_blank');
+  });
+</script>

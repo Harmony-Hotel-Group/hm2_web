@@ -1,0 +1,171 @@
+---
+interface Props {
+  id?: string;
+  label?: string;
+  placeholder?: string;
+  checkinName?: string;
+  checkoutName?: string;
+  required?: boolean;
+  lang?: 'es' | 'en';
+}
+
+const {
+  id = 'stay-range',
+  label = 'Fechas de estadía',
+  placeholder = 'Selecciona ingreso y salida',
+  checkinName = 'checkin',
+  checkoutName = 'checkout',
+  required = true,
+  lang = 'es'
+} = Astro.props;
+---
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+
+<div class="form-group">
+  <label class="label text-black" for={id}>{label}</label>
+  <div class="relative">
+    <input
+      id={id}
+      type="text"
+      placeholder={placeholder}
+      readonly
+      data-lang={lang}
+      data-checkin-name={checkinName}
+      data-checkout-name={checkoutName}
+      data-required={required ? 'true' : 'false'}
+      class="input-field h-[42px] pr-10 text-black border-gray-500 placeholder:text-gray-700 cursor-pointer date-range-input"
+    />
+    <input type="hidden" name={checkinName} data-checkin-hidden={id} />
+    <input type="hidden" name={checkoutName} data-checkout-hidden={id} />
+    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+
+<script>
+  type FlatpickrFn = (
+    element: HTMLInputElement,
+    options: Record<string, unknown>
+  ) => { setDate: (dates: Date[], triggerChange?: boolean) => void };
+
+  declare global {
+    interface Window {
+      flatpickr?: FlatpickrFn;
+      initializeDateRangePickers?: () => void;
+    }
+  }
+
+  function formatDateISO(date: Date): string {
+    return date.toLocaleDateString('en-CA');
+  }
+
+  function formatRangeLabel(start: Date, end: Date): string {
+    const diffMs = end.getTime() - start.getTime();
+    const nights = Math.max(0, Math.round(diffMs / (1000 * 60 * 60 * 24)));
+    const nightLabel = `${nights} noche${nights === 1 ? '' : 's'}`;
+    return `${formatDateISO(start)} -> ${formatDateISO(end)} (${nightLabel})`;
+  }
+
+  function initPicker(input: HTMLInputElement) {
+    if (input.dataset.flatpickrInitialized === 'true') return;
+    if (!window.flatpickr) return;
+
+    const pickerId = input.id;
+    const checkinHidden = document.querySelector(
+      `[data-checkin-hidden="${pickerId}"]`
+    ) as HTMLInputElement | null;
+    const checkoutHidden = document.querySelector(
+      `[data-checkout-hidden="${pickerId}"]`
+    ) as HTMLInputElement | null;
+
+    if (!checkinHidden || !checkoutHidden) return;
+
+    const locale = input.dataset.lang === 'es' ? 'es' : 'default';
+    const isRequired = input.dataset.required === 'true';
+    const emitRangeChange = () => {
+      input.dispatchEvent(
+        new CustomEvent('date-range:change', {
+          bubbles: true,
+          detail: {
+            id: pickerId,
+            checkin: checkinHidden.value,
+            checkout: checkoutHidden.value,
+            hasRange: Boolean(checkinHidden.value && checkoutHidden.value),
+          },
+        })
+      );
+    };
+
+    const picker = window.flatpickr(input, {
+      mode: 'range',
+      minDate: 'today',
+      dateFormat: 'Y-m-d',
+      locale,
+      allowInput: false,
+      onChange: (selectedDates: Date[], _dateStr: string, instance: { clear: () => void }) => {
+        if (selectedDates.length < 2) {
+          checkinHidden.value = '';
+          checkoutHidden.value = '';
+          if (!isRequired) input.value = '';
+          emitRangeChange();
+          return;
+        }
+
+        const [start, end] = selectedDates;
+        if (start.toDateString() === end.toDateString()) {
+          instance.clear();
+          checkinHidden.value = '';
+          checkoutHidden.value = '';
+          input.value = '';
+          alert('Debes seleccionar al menos 2 días diferentes.');
+          emitRangeChange();
+          return;
+        }
+
+        checkinHidden.value = formatDateISO(start);
+        checkoutHidden.value = formatDateISO(end);
+        input.value = formatRangeLabel(start, end);
+        emitRangeChange();
+      },
+      onReady: (_selectedDates: Date[], _dateStr: string, instance: { setDate: (dates: Date[], triggerChange?: boolean) => void }) => {
+        // Respetar valores existentes (por ejemplo, cuando se sincroniza entre modo estándar y grupo).
+        if (checkinHidden.value && checkoutHidden.value) {
+          const start = new Date(checkinHidden.value);
+          const end = new Date(checkoutHidden.value);
+          if (!Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime())) {
+            instance.setDate([start, end], true);
+          }
+        }
+        input.dataset.flatpickrInitialized = 'true';
+        emitRangeChange();
+      }
+    });
+
+    if (!picker) return;
+  }
+
+  function initializeDateRangePickers() {
+    document.querySelectorAll('.date-range-input').forEach((input) => {
+      if (input instanceof HTMLInputElement) {
+        initPicker(input);
+      }
+    });
+  }
+
+  window.initializeDateRangePickers = initializeDateRangePickers;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeDateRangePickers);
+  } else {
+    initializeDateRangePickers();
+  }
+
+  document.addEventListener('astro:page-load', initializeDateRangePickers);
+</script>

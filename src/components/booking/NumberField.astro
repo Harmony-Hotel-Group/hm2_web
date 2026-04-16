@@ -1,0 +1,25 @@
+---
+interface Props {
+  id: string;
+  name: string;
+  label: string;
+  min?: number;
+  max?: number;
+  value?: number;
+}
+
+const { id, name, label, min = 0, max = 100, value } = Astro.props;
+---
+
+<div class="form-group">
+  <label class="label" for={id}>{label}</label>
+  <input 
+    type="number" 
+    id={id} 
+    name={name}
+    min={min}
+    max={max}
+    value={value ?? min}
+    class="input-field"
+  />
+</div>

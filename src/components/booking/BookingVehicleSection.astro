@@ -1,0 +1,82 @@
+---
+interface Props {
+  id?: string;
+}
+
+const { id = 'vehicle-section' } = Astro.props;
+
+const vehicleTypes = [
+  { value: 'car', label: 'Automóvil' },
+  { value: 'motorcycle', label: 'Motocicleta' },
+  { value: 'van', label: 'Van' },
+  { value: 'truck', label: 'Camión' },
+  { value: 'other', label: 'Otro' }
+];
+---
+
+<div id={id} class="vehicle-section hidden mt-4 p-4 bg-gray-50 rounded-lg border border-gray-500 text-black">
+  <div class="flex items-center justify-between mb-4">
+    <h4 class="text-sm font-semibold text-black">Vehículos</h4>
+    <button type="button" id="add-vehicle" class="text-sm text-primary hover:text-accent font-medium flex items-center">
+      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      Agregar
+    </button>
+  </div>
+  
+  <div id="vehicle-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+    <!-- Vehicles will be added here dynamically -->
+  </div>
+  
+  <p class="text-xs text-black mt-2">Máximo 6 vehículos</p>
+</div>
+
+<template id="vehicle-item-template">
+  <div class="vehicle-item flex flex-col gap-2 p-3 bg-white rounded-lg border border-gray-500">
+    <select name="vehicleType" class="input-field w-full h-[47px] text-black border-gray-500">
+      <option value="">Tipo</option>
+      {vehicleTypes.map((type) => (
+        <option value={type.value}>{type.label}</option>
+      ))}
+    </select>
+    <input type="text" name="vehiclePlate" placeholder="Placa" class="input-field w-full h-[42px] text-black border-gray-500 placeholder:text-gray-700 uppercase" maxlength="10" />
+    <button type="button" class="remove-vehicle self-end text-red-500 hover:text-red-700 p-2">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+      </svg>
+    </button>
+  </div>
+</template>
+
+<script>
+  const vehicleSection = document.getElementById('vehicle-section');
+  const vehicleList = document.getElementById('vehicle-list');
+  const addVehicleBtn = document.getElementById('add-vehicle');
+  const template = document.getElementById('vehicle-item-template') as HTMLTemplateElement;
+  
+  let vehicleCount = 0;
+  const maxVehicles = 6;
+
+  function addVehicle() {
+    if (vehicleCount >= maxVehicles) return;
+    
+    const clone = template.content.cloneNode(true);
+    const item = clone.querySelector('.vehicle-item');
+    
+    item?.querySelectorAll('select, input').forEach((el) => {
+      const htmlEl = el as HTMLElement;
+      htmlEl.name = htmlEl.name + vehicleCount;
+    });
+    
+    vehicleList?.appendChild(clone);
+    vehicleCount++;
+    
+    item?.querySelector('.remove-vehicle')?.addEventListener('click', () => {
+      item.remove();
+      vehicleCount--;
+    });
+  }
+
+  addVehicleBtn?.addEventListener('click', addVehicle);
+</script>

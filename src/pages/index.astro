@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import BookingForm from '../components/BookingForm.astro';
 import BookingBar from '../components/BookingBar.astro';
+import BookingForm from '../components/booking/BookingForm.astro';
 import RoomCard from '../components/RoomCard.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
 import ExperienceCard from '../components/ExperienceCard.astro';
@@ -53,11 +53,12 @@ import ExperienceCard from '../components/ExperienceCard.astro';
       </div>
     </div>
 
-    <!-- Booking Form: Bottom of Hero, separated from navbar -->
+    <!-- Booking Bar: Bottom of Hero, separated from navbar -->
     <div class="relative z-10 pb-8 px-4">
       <div class="max-w-4xl mx-auto animate-slide-up animate-delay-200">
-        <BookingForm variant="hero" />
-        <BookingBar />
+        <BookingBar>
+          <BookingForm variant="hero" />
+        </BookingBar>
       </div>
     </div>
 

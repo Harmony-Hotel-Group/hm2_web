@@ -1,3 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <text y=".9em" font-size="90">🏨</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1155 1155">
+  <g transform="translate(0,1155) scale(0.1,-0.1)" fill="#dcad53">
+    <path d="M0 5775c0-5775 0-5775 5740-5775 5740 0 5740 0 5740 5775 0 5775 0 5775-5740 5775-5740 0-5740 0-5740-5775z"/>
+  </g>
 </svg>

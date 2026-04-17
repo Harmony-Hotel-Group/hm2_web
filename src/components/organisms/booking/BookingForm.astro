@@ -501,13 +501,51 @@ const fieldControlClass =
     const formData = new FormData(form);
     const mode = formModeInput.value;
     
-    if (mode === 'group') {
-      const groupAdults = parseInt(formData.get('groupAdults') as string) || 0;
-      if (groupAdults < groupThreshold) {
-        alert(`Para reservas grupales se requieren mínimo ${groupThreshold} adultos`);
+    // Obtener checkin/checkout según modo
+    const groupCheckin = formData.get('group_checkin') as string | null;
+    const groupCheckout = formData.get('group_checkout') as string | null;
+    const checkin = mode === 'group' 
+      ? (groupCheckin || (formData.get('checkin') as string | null))
+      : (formData.get('checkin') as string | null);
+    const checkout = mode === 'group'
+      ? (groupCheckout || (formData.get('checkout') as string | null))
+      : (formData.get('checkout') as string | null);
+    
+    // Validar fechas (obligatorio en ambos modos)
+    if (!checkin || !checkout) {
+      alert('Selecciona una fecha de ingreso y salida.');
+      return;
+    }
+    
+    // Detectar opciones extras antes de validaciones específicas
+    const parkingEnabled = formData.get('parking') === 'on';
+    const specialRequestEnabled = formData.get('special_request_enabled') === 'on';
+    let specialRequestText = '';
+    
+    if (specialRequestEnabled) {
+      specialRequestText = String(formData.get('special_requests') || '').trim();
+      if (specialRequestText.length < 25) {
+        alert('Las solicitudes especiales deben tener al menos 25 caracteres.');
         return;
       }
-    } else {
+    }
+    
+    // Validaciones específicas por modo
+    if (mode === 'standard') {
+      // Adultos y habitaciones obligatorios
+      const adults = formData.get('adults');
+      const rooms = formData.get('rooms');
+      
+      if (!adults || adults === '') {
+        alert('Selecciona el número de adultos.');
+        return;
+      }
+      if (!rooms || rooms === '') {
+        alert('Selecciona el número de habitaciones.');
+        return;
+      }
+      
+      // Validar edades de niños (si hay niños)
       const childrenCount = parseInt((formData.get('children') as string) || '0', 10) || 0;
       const childAges: number[] = [];
       for (let i = 1; i <= childrenCount; i++) {
@@ -524,29 +562,43 @@ const fieldControlClass =
         childAges.push(age);
       }
       formData.set('children_ages_summary', childAges.join(', '));
+    } else {
+      // Modo grupo: mínimo 8 adultos
+      const groupAdults = parseInt(formData.get('groupAdults') as string) || 0;
+      if (groupAdults < groupThreshold) {
+        alert(`Para reservas grupales se requieren mínimo ${groupThreshold} adultos`);
+        return;
+      }
     }
-
-    const groupCheckin = formData.get('group_checkin') as string | null;
-    const groupCheckout = formData.get('group_checkout') as string | null;
-    const checkin = mode === 'group' ? (groupCheckin || (formData.get('checkin') as string | null)) : (formData.get('checkin') as string | null);
-    const checkout = mode === 'group' ? (groupCheckout || (formData.get('checkout') as string | null)) : (formData.get('checkout') as string | null);
-    if (!checkin || !checkout) {
-      alert('Selecciona una fecha de ingreso y salida válida.');
-      return;
+    
+    // Validar vehículo si parking activado
+    if (parkingEnabled) {
+      const vehicleItems = document.querySelectorAll('.vehicle-item');
+      let hasValidVehicle = false;
+      vehicleItems.forEach(item => {
+        const typeSelect = item.querySelector('select[name^="vehicleType"]') as HTMLSelectElement | null;
+        const plateInput = item.querySelector('input[name^="vehiclePlate"]') as HTMLInputElement | null;
+        if (typeSelect && typeSelect.value && plateInput && plateInput.value.trim()) {
+          hasValidVehicle = true;
+        }
+      });
+      if (!hasValidVehicle) {
+        alert('Si seleccionas parking, debes agregar al menos un vehículo con su placa.');
+        return;
+      }
     }
-
-    const specialRequestEnabled = formData.get('special_request_enabled');
-    const specialRequestText = (formData.get('special_requests') as string | null)?.trim() || '';
-
+    
+    // Construir objeto data para el mensaje
     const data: Record<string, any> = {
       mode,
       checkin,
       checkout,
       breakfast: formData.get('breakfast') ? 'Sí' : 'No',
-      parking: formData.get('parking') ? 'Sí' : 'No',
+      parking: parkingEnabled ? 'Sí' : 'No',
       special_request: specialRequestEnabled ? (specialRequestText || 'Sin detalle') : 'Ninguna'
     };
-
+    
+    // Procesar vehículos
     const vehicleMap = new Map<number, { type?: string; plate?: string }>();
     for (const [key, value] of formData.entries()) {
       const typeMatch = key.match(/^vehicleType(\d+)$/);
@@ -561,7 +613,8 @@ const fieldControlClass =
       }
     }
     data.vehicles = Array.from(vehicleMap.values()).filter((v) => (v.type && v.type.trim()) || (v.plate && v.plate.trim()));
-
+    
+    // Procesar datos específicos del modo
     if (mode === 'standard') {
       data.adults = formData.get('adults');
       data.children = formData.get('children');
@@ -594,13 +647,15 @@ const fieldControlClass =
       data.distributionType = formData.get('distributionType');
       data.groupNotes = formData.get('special_requests') || '';
     }
-
+    
+    // Calcular noches
     const checkIn = new Date(data.checkin as string);
     const checkOut = new Date(data.checkout as string);
     const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
-
+    
+    // Construir mensaje WhatsApp
     let message = `*¡Hola! Me interesa reservar en Hotel Majestic II.*%0A%0A📅 *Check-in:* ${data.checkin}%0A📅 *Check-out:* ${data.checkout}%0A Alojamiento: (${nights} noche${nights > 1 ? 's' : ''})%0A`;
-
+    
     if (mode === 'standard') {
       const adultsForMessage = data.totalBillableAdults ?? data.adults;
       const childrenForMessage = data.minorChildrenCount ?? data.children;
@@ -617,9 +672,9 @@ const fieldControlClass =
     } else {
       message += `👥 *Grupo:* ${data.groupAdults} adultos, ${data.groupTeens} adolescentes, ${data.groupKids} niños, ${data.groupInfants} bebés%0A🏠 *Distribución:* ${data.distributionType}%0A`;
     }
-
+    
     message += `%0A🏷️ *Extras:*%0A   Desayuno: ${data.breakfast}%0A   Parking: ${data.parking}%0A`;
-
+    
     if (data.parking === 'Sí' && data.vehicles.length > 0) {
       message += `%0A🚗 *Vehículos:*`;
       data.vehicles.forEach((vehicle: { type?: string; plate?: string }, index: number) => {
@@ -628,9 +683,9 @@ const fieldControlClass =
         message += `%0A   ${index + 1}. ${type} - ${plate}`;
       });
     }
-
+    
     message += `%0A%0A📝 *Notas:* ${data.special_request}%0A%0APor favor confirmar disponibilidad y tarifa.`;
-
+    
     window.open(`https://wa.me/593980098757?text=${message}`, '_blank');
   });
 </script>

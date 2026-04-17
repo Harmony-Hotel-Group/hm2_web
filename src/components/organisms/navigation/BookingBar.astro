@@ -8,12 +8,85 @@ const { variant = 'inline' } = Astro.props;
 
 <div class:list={[
   'booking-bar-container',
-  variant === 'floating' ? 'fixed bottom-4 left-4 right-4 md:left-auto md:right-auto md:w-full max-w-5xl md:rounded-2xl shadow-2xl z-40' : 'relative'
+  variant === 'floating' 
+    ? 'fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] md:w-[90%] max-w-5xl z-40'
+    : 'relative w-[90%] mx-auto max-w-5xl'
 ]}>
-  <div class:list={[
-  'booking-bar',
-  variant === 'floating' ? 'bg-white md:rounded-2xl' : ''
-]}>
-    <slot />
+  <div class="booking-bar-inner overflow-hidden">
+    <div class="booking-bar-glow"></div>
+    <div class:list={[
+      'booking-bar',
+      variant === 'floating' ? 'bg-white/95 backdrop-blur-xl' : 'bg-white'
+    ]}>
+      <slot />
+    </div>
   </div>
 </div>
+
+<style>
+  :global(.booking-bar-container.fixed) {
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .booking-bar-inner {
+    position: relative;
+    border-radius: 1.5rem;
+  }
+
+  .booking-bar-inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 1.5rem;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.2) 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .booking-bar-glow {
+    position: absolute;
+    inset: -1px;
+    border-radius: 1.5rem;
+    background: linear-gradient(
+      135deg,
+      rgba(212, 175, 125, 0.15) 0%,
+      rgba(189, 166, 124, 0.08) 40%,
+      rgba(139, 119, 101, 0.12) 100%
+    );
+    filter: blur(8px);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .booking-bar-container:hover .booking-bar-glow {
+    opacity: 1;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    :global(.booking-bar-container.fixed) {
+      bottom: 1rem !important;
+      width: 95% !important;
+      min-width: unset !important;
+    }
+  }
+</style>

@@ -33,19 +33,23 @@ const vehicleTypes = [
 </div>
 
 <template id="vehicle-item-template">
-  <div class="vehicle-item flex flex-col gap-2 p-3 bg-white rounded-lg border border-gray-500">
-    <select name="vehicleType" class="input-field w-full h-[47px] text-black border-gray-500">
-      <option value="">Tipo</option>
-      {vehicleTypes.map((type) => (
-        <option value={type.value}>{type.label}</option>
-      ))}
-    </select>
-    <input type="text" name="vehiclePlate" placeholder="Placa" class="input-field w-full h-[42px] text-black border-gray-500 placeholder:text-gray-700 uppercase" maxlength="10" />
-    <button type="button" class="remove-vehicle self-end text-red-500 hover:text-red-700 p-2">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+  <div class="vehicle-item relative flex flex-col gap-2 p-3 bg-white rounded-lg border border-gray-500">
+    <!-- Botón eliminar en esquina superior derecha tipo X de tarjeta -->
+    <button type="button" class="remove-vehicle absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 transition-colors shadow-md z-10">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+      <select name="vehicleType" class="input-field w-full h-[42px] text-sm text-black border-gray-500">
+        <option value="">Tipo</option>
+        {vehicleTypes.map((type) => (
+          <option value={type.value}>{type.label}</option>
+        ))}
+      </select>
+      <input type="text" name="vehiclePlate" placeholder="Placa" class="input-field w-full h-[42px] text-sm text-black border-gray-500 placeholder:text-gray-700 uppercase" maxlength="10" />
+    </div>
   </div>
 </template>
 

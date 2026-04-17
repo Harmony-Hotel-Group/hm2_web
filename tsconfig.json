@@ -1,6 +1,7 @@
 {
-  "extends": "./.astro/types.d.ts",
+  "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
+    "strictNullChecks": true,
     "paths": {
       "@components/*": ["./src/components/*"],
       "@organisms/*": ["./src/components/organisms/*"],

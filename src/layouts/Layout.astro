@@ -174,10 +174,11 @@ const { title, description = "Hotel Majestic II - Elegancia colonial en el coraz
     </a>
 
     <script>
-      // Navbar scroll effect
       const navbar = document.getElementById('navbar');
       const mobileMenuBtn = document.getElementById('mobile-menu-btn');
       const mobileMenu = document.getElementById('mobile-menu');
+
+      if (!navbar || !mobileMenuBtn || !mobileMenu) return;
 
       window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
@@ -189,13 +190,11 @@ const { title, description = "Hotel Majestic II - Elegancia colonial en el coraz
         }
       });
 
-      // Initialize navbar state
       if (window.scrollY > 50) {
         navbar.classList.add('bg-white', 'shadow-md');
         navbar.classList.remove('bg-transparent');
       }
 
-      // Mobile menu toggle
       mobileMenuBtn.addEventListener('click', () => {
         mobileMenu.classList.toggle('hidden');
       });

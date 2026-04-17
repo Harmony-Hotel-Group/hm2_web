@@ -2,7 +2,21 @@
 import Layout from '@layouts/Layout.astro';
 import RoomCard from '@organisms/cards/RoomCard.astro';
 
-const rooms = [
+type RoomCategory = 'estandar' | 'doble' | 'suite';
+
+interface Room {
+  id: string;
+  title: string;
+  price: number;
+  category: RoomCategory;
+  capacity: number;
+  size: string;
+  description: string;
+  features: string[];
+  popular: boolean;
+}
+
+const rooms: Room[] = [
   {
     id: 'estandar',
     title: 'Habitación Estándar',
@@ -193,9 +207,8 @@ const categories = [
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      const filter = btn.getAttribute('data-filter');
+      const filter = btn.getAttribute('data-filter') || 'all';
       
-      // Update button styles
       filterBtns.forEach(b => {
         b.classList.remove('bg-primary', 'text-white');
         b.classList.add('border', 'border-primary', 'text-primary');
@@ -203,7 +216,6 @@ const categories = [
       btn.classList.add('bg-primary', 'text-white');
       btn.classList.remove('border', 'border-primary', 'text-primary');
       
-      // Filter cards
       roomCards.forEach(card => {
         if (filter === 'all' || card.classList.contains(filter)) {
           (card as HTMLElement).style.display = 'block';

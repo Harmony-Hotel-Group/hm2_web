@@ -27,10 +27,9 @@ const { name, date, rating = 5, text, image } = Astro.props;
     <div class="flex-1">
       <div class="flex items-center justify-between mb-2">
         <cite class="font-medium text-primary not-italic">{name}</cite>
-        <div class="flex items-center">
+<div class="flex items-center">
           {[...Array(5)].map((_, i) => (
             <svg 
-              key={i} 
               class:list={[
                 'w-4 h-4',
                 i < rating ? 'text-accent' : 'text-gray-200'

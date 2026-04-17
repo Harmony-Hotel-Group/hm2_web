@@ -50,32 +50,35 @@ const vehicleTypes = [
 </template>
 
 <script>
-  const vehicleSection = document.getElementById('vehicle-section');
   const vehicleList = document.getElementById('vehicle-list');
   const addVehicleBtn = document.getElementById('add-vehicle');
-  const template = document.getElementById('vehicle-item-template') as HTMLTemplateElement;
+  const template = document.getElementById('vehicle-item-template') as HTMLTemplateElement | null;
   
   let vehicleCount = 0;
   const maxVehicles = 6;
 
   function addVehicle() {
-    if (vehicleCount >= maxVehicles) return;
+    if (vehicleCount >= maxVehicles || !template) return;
     
-    const clone = template.content.cloneNode(true);
+    const clone = template.content.cloneNode(true) as DocumentFragment;
     const item = clone.querySelector('.vehicle-item');
     
-    item?.querySelectorAll('select, input').forEach((el) => {
-      const htmlEl = el as HTMLElement;
-      htmlEl.name = htmlEl.name + vehicleCount;
-    });
+    if (item) {
+      const elements = item.querySelectorAll('select, input') as NodeListOf<HTMLInputElement | HTMLSelectElement>;
+      elements.forEach((htmlEl) => {
+        htmlEl.name = htmlEl.name + vehicleCount;
+      });
+    }
     
     vehicleList?.appendChild(clone);
     vehicleCount++;
     
-    item?.querySelector('.remove-vehicle')?.addEventListener('click', () => {
-      item.remove();
-      vehicleCount--;
-    });
+    if (item) {
+      item.querySelector('.remove-vehicle')?.addEventListener('click', () => {
+        item.remove();
+        vehicleCount--;
+      });
+    }
   }
 
   addVehicleBtn?.addEventListener('click', addVehicle);

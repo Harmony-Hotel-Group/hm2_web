@@ -5,12 +5,58 @@ import BookingForm from '@organisms/booking/BookingForm.astro';
 import RoomCard from '@organisms/cards/RoomCard.astro';
 import TestimonialCard from '@organisms/cards/TestimonialCard.astro';
 import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
+
+const currentLang = 'es';
+
+const t = (key: string) => {
+  const translations: Record<string, string> = {
+    heroTitle: 'Hotel Majestic II',
+    heroSubtitle: 'Experimenta la elegancia colonial en el corazón de Cuenca. Donde la historia meets la comodidad moderna.',
+    cta: 'Reservar Ahora',
+    servicesBtn: 'Ver Servicios',
+    servicesTitle: 'Nuestros Servicios',
+    servicesSubtitle: 'Disfruta de comodidades modernas mientras te sumerges en la esencia colonial de Cuenca',
+    wifiTitle: 'WiFi Gratis',
+    wifiDesc: 'Conexión de alta velocidad en todas las áreas del hotel',
+    breakfastTitle: 'Desayuno incluido',
+    breakfastDesc: 'Delicioso desayuno tipo buffet con opciones locales e internacionales',
+    parkingTitle: 'Parqueadero',
+    parkingDesc: 'Estacionamiento privado vigilado las 24 horas',
+    conciergeTitle: 'Concierge',
+    conciergeDesc: 'Asistencia personalizada para tours, transporte y recomendaciones',
+    roomsTitle: 'Habitaciones Destacadas',
+    roomsSubtitle: 'Encuentra el espacio perfecto para tu estancia en Cuenca',
+    viewAllRooms: 'Ver Todas las Habitaciones',
+    aboutTitle: 'Historia y Elegancia Colonial',
+    aboutDesc: 'Ubicado en el corazón colonial de Cuenca, Hotel Majestic II combina la arquitectura histórica del siglo XIX con comodidades modernas.',
+    aboutGroup: 'Formamos parte de Hospitality & Hotels Group, una cadena hotelera comprometida con la excelencia.',
+    location: 'Ubicación',
+    locationValue: 'Centro Histórico',
+    rating: '4.8/5 en Google',
+    contactUs: 'Contáctanos',
+    experiencesTitle: 'Descubre Cuenca',
+    experiencesSubtitle: 'Explora los tesoros culturales y turísticos que rodean nuestro hotel',
+    viewAllExperiences: 'Ver Todas las Experiencias',
+    testimonialsTitle: 'Lo que dicen nuestros huéspedes',
+    testimonialsSubtitle: 'Testimonios de quienes han experimentado la hospitalidad del Hotel Majestic II',
+    galleryTitle: 'Galería',
+    gallerySubtitle: 'Un vistazo a la belleza de nuestro hotel y la ciudad',
+    ctaTitle: '¿Listo para vivir la experiencia Majestic?',
+    ctaDesc: 'Reserva ahora y vivirás la magia colonial de Cuenca en el corazón de la ciudad.',
+    whatsapp: 'Reservar por WhatsApp',
+    email: 'Contactar por Email',
+    yearsOfExcellence: '10+Años deexcelencia'
+  };
+  return translations[key] || key;
+};
+
+const roomLink = '/habitaciones';
+const experienciasLink = '/experiencias';
+const contactoLink = '/contacto';
 ---
 
-<Layout title="Inicio">
-  <!-- Hero Section -->
+<Layout lang={currentLang} title="Inicio">
   <section class="relative min-h-screen flex flex-col justify-start pt-20 md:pt-24 overflow-hidden">
-    <!-- Background Image -->
     <div class="absolute inset-0 z-0">
       <img 
         src="https://images.unsplash.com/photo-1566073771259-6a8506079945?auto=format&fit=crop&w=1920&q=80" 
@@ -20,49 +66,45 @@ import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
       <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
     </div>
 
-    <!-- Main Content: Centered in available space -->
     <div class="relative z-10 flex-grow flex items-center justify-center px-4 py-8">
       <div class="max-w-4xl mx-auto text-center">
-        <!-- Logo Image -->
         <div class="animate-fade-in mb-6">
           <img 
-            src="logo.png" 
+            src="/logo.png" 
             alt="Hotel Majestic II Logo" 
             class="mx-auto w-[25%]"
           />
         </div>
         
         <h1 class="animate-slide-up font-display text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-          Hotel Majestic II
+          {t('heroTitle')}
         </h1>
         
-        <p class="animate-slide-up animate-delay-100 font-accent text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
-          Experimenta la elegancia colonial en el corazón de Cuenca. Donde la historia meets la comodidad moderna.
+        <p class="animate-slide-up font-accent text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
+          {t('heroSubtitle')}
         </p>
 
         <div class="animate-slide-up animate-delay-200 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a href="#habitaciones" class="btn-accent text-lg px-8 py-4">
-            Reservar Ahora
+          <a href={roomLink} class="btn-accent text-lg px-8 py-4">
+            {t('cta')}
           </a>
           <a href="#servicios" class="inline-flex items-center justify-center border-2 border-white text-white hover:bg-white hover:text-primary font-bold py-4 px-8 rounded-lg transition-all duration-300 text-lg">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Ver Servicios
+            {t('servicesBtn')}
           </a>
         </div>
       </div>
     </div>
 
-     <!-- Booking Bar: Bottom of Hero, separated from navbar -->
-     <div class="relative z-10 pb-8 px-4">
-       <BookingBar>
-         <BookingForm variant="hero" />
-       </BookingBar>
-     </div>
+    <div class="relative z-10 pb-8 px-4">
+      <BookingBar>
+        <BookingForm variant="hero" />
+      </BookingBar>
+    </div>
 
-    <!-- Scroll Indicator -->
     <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 animate-bounce">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
@@ -70,18 +112,16 @@ import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
     </div>
   </section>
 
-  <!-- Services Section -->
   <section id="servicios" class="py-20 bg-background-warm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
-        <h2 class="section-title">Nuestros Servicios</h2>
+        <h2 class="section-title">{t('servicesTitle')}</h2>
         <p class="section-subtitle mx-auto mt-4">
-          Disfruta de comodidades modernas mientras te sumerges en la esencia colonial de Cuenca
+          {t('servicesSubtitle')}
         </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- WiFi -->
         <div class="bg-white rounded-xl p-8 shadow-md hover:shadow-lg transition-shadow text-center group">
           <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -89,53 +129,49 @@ import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4l4 4m0 0l4-4m-4 4v12" />
             </svg>
           </div>
-          <h3 class="font-display text-xl font-bold text-primary mb-2">WiFi Gratis</h3>
-          <p class="text-text-light">Conexión de alta velocidad en todas las áreas del hotel</p>
+          <h3 class="font-display text-xl font-bold text-primary mb-2">{t('wifiTitle')}</h3>
+          <p class="text-text-light">{t('wifiDesc')}</p>
         </div>
 
-        <!-- Desayuno -->
         <div class="bg-white rounded-xl p-8 shadow-md hover:shadow-lg transition-shadow text-center group">
           <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0-1H8m4 0h4M12 16v-4m0 0H8" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0-1H8m4 0h4" />
             </svg>
           </div>
-          <h3 class="font-display text-xl font-bold text-primary mb-2">Desayuno incluido</h3>
-          <p class="text-text-light">Delicioso desayuno tipo buffet con opciones locales e internacionales</p>
+          <h3 class="font-display text-xl font-bold text-primary mb-2">{t('breakfastTitle')}</h3>
+          <p class="text-text-light">{t('breakfastDesc')}</p>
         </div>
 
-        <!-- Estacionamiento -->
         <div class="bg-white rounded-xl p-8 shadow-md hover:shadow-lg transition-shadow text-center group">
           <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 8v-8a2 2 0 00-2-2H8a2 2 0 00-2 2v8" />
             </svg>
           </div>
-          <h3 class="font-display text-xl font-bold text-primary mb-2">Parqueadero</h3>
-          <p class="text-text-light">Estacionamiento privado vigilado las 24 horas</p>
+          <h3 class="font-display text-xl font-bold text-primary mb-2">{t('parkingTitle')}</h3>
+          <p class="text-text-light">{t('parkingDesc')}</p>
         </div>
 
-        <!-- Conserjería -->
         <div class="bg-white rounded-xl p-8 shadow-md hover:shadow-lg transition-shadow text-center group">
           <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 14.121A3 3 0 0112 14m0 0l2.121 2.121a3 3 0 104.243 4.243m0-8.243l-2.121-2.121a3 3 0 00-4.243 0M16 16l-4-4m0 0l4-4m-4 4h8" />
             </svg>
           </div>
-          <h3 class="font-display text-xl font-bold text-primary mb-2">Concierge</h3>
-          <p class="text-text-light">Asistencia personalizada para tours, transporte y recomendaciones</p>
+          <h3 class="font-display text-xl font-bold text-primary mb-2">{t('conciergeTitle')}</h3>
+          <p class="text-text-light">{t('conciergeDesc')}</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Featured Rooms Section -->
   <section id="habitaciones" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
-        <h2 class="section-title">Habitaciones Destacadas</h2>
+        <h2 class="section-title">{t('roomsTitle')}</h2>
         <p class="section-subtitle mx-auto mt-4">
-          Encuentra el espacio perfecto para tu estancia en Cuenca
+          {t('roomsSubtitle')}
         </p>
       </div>
 
@@ -175,8 +211,8 @@ import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
       </div>
 
       <div class="text-center mt-12">
-        <a href="/habitaciones" class="btn-outline">
-          Ver Todas las Habitaciones
+        <a href={roomLink} class="btn-outline">
+          {t('viewAllRooms')}
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
@@ -185,7 +221,6 @@ import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
     </div>
   </section>
 
-  <!-- About Section -->
   <section class="py-20 bg-background bg-pattern">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -196,19 +231,18 @@ import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
             class="rounded-xl shadow-2xl"
           />
           <div class="absolute -bottom-6 -right-6 bg-accent text-white p-6 rounded-xl shadow-xl hidden md:block">
-            <div class="text-3xl font-display font-bold">10+</div>
-            <div class="text-sm">Años de<br/>excelencia</div>
+            <div class="text-3xl font-display font-bold">{t('yearsOfExcellence')}</div>
           </div>
         </div>
 
         <div>
           <span class="text-accent font-accent text-lg tracking-widest uppercase">Sobre Nosotros</span>
-          <h2 class="section-title mt-2">Historia y Elegancia Colonial</h2>
+          <h2 class="section-title mt-2">{t('aboutTitle')}</h2>
           <p class="text-text-light text-lg leading-relaxed mb-6">
-            Ubicado en el corazón colonial de Cuenca, Hotel Majestic II combina la arquitectura histórica del siglo XIX con comodidades modernas. Nuestra ubicación privilegiada te permite explorar las calles empedradas, iglesias coloniales y la rica cultura de la "Atenas del Ecuador".
+            {t('aboutDesc')}
           </p>
           <p class="text-text-light text-lg leading-relaxed mb-8">
-            Formamos parte de Hospitality & Hotels Group, una cadena hotelera comprometida con la excelencia en servicio y la autenticidad de la experiencia ecuatoriana.
+            {t('aboutGroup')}
           </p>
 
           <div class="grid grid-cols-2 gap-6 mb-8">
@@ -218,8 +252,8 @@ import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
               <div>
-                <div class="font-display font-bold text-lg text-primary">Ubicación</div>
-                <div class="text-text-light text-sm">Centro Histórico</div>
+                <div class="font-display font-bold text-lg text-primary">{t('location')}</div>
+                <div class="text-text-light text-sm">{t('locationValue')}</div>
               </div>
             </div>
             <div class="flex items-center">
@@ -228,33 +262,32 @@ import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
               </svg>
               <div>
                 <div class="font-display font-bold text-lg text-primary">Calificación</div>
-                <div class="text-text-light text-sm">4.8/5 en Google</div>
+                <div class="text-text-light text-sm">{t('rating')}</div>
               </div>
             </div>
           </div>
 
-          <a href="/contacto" class="btn-primary">
-            Contáctanos
+          <a href={contactoLink} class="btn-primary">
+            {t('contactUs')}
           </a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Experiences Section -->
   <section id="experiencias" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
-        <h2 class="section-title">Descubre Cuenca</h2>
+        <h2 class="section-title">{t('experiencesTitle')}</h2>
         <p class="section-subtitle mx-auto mt-4">
-          Explora los tesoros culturales y turísticos que rodean nuestro hotel
+          {t('experiencesSubtitle')}
         </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <ExperienceCard 
           title="Catedral de la Inmaculada"
-          description="La catedral más iconicca del Ecuador con sus domos azules y arquitectura neoclásica."
+          description="La catedral más icónica del Ecuador con sus domos azules y arquitectura neoclásica."
           distance="5 min caminando"
           href="/experiencias#catedral"
         />
@@ -275,8 +308,8 @@ import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
       </div>
 
       <div class="text-center mt-12">
-        <a href="/experiencias" class="btn-outline">
-          Ver Todas las Experiencias
+        <a href={experienciasLink} class="btn-outline">
+          {t('viewAllExperiences')}
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
@@ -285,13 +318,12 @@ import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
     </div>
   </section>
 
-  <!-- Testimonials Section -->
   <section class="py-20 bg-background-warm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
-        <h2 class="section-title">Lo que dicen nuestros huéspedes</h2>
+        <h2 class="section-title">{t('testimonialsTitle')}</h2>
         <p class="section-subtitle mx-auto mt-4">
-          Testimonios de quienes han experimentado la hospitalidad del Hotel Majestic II
+          {t('testimonialsSubtitle')}
         </p>
       </div>
 
@@ -300,14 +332,14 @@ import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
           name="María González"
           date="Enero 2024"
           rating={5}
-          text="La ubicación es perfecta para explorar el centro histórico. El personal fue extremadamente amable y nos ayudó a planificar unsere Tour durch Cuenca. ¡Totalmente recomendado!"
+          text="La ubicación es perfecta para explorar el centro histórico. El personal fue extremamente amable y nos ayudó a planificar nuestro tour por Cuenca. ¡Totalmente recomendado!"
         />
         
         <TestimonialCard 
           name="John Smith"
           date="Diciembre 2023"
           rating={5}
-          text="Beautiful colonial hotel with modern amenities. The breakfast was excelent and the staff went above and beyond to make our anniversary special. Will definitely return!"
+          text="Beautiful colonial hotel with modern amenities. The breakfast was excellent and the staff went above and beyond to make our anniversary special. Will definitely return!"
         />
         
         <TestimonialCard 
@@ -320,13 +352,12 @@ import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
     </div>
   </section>
 
-  <!-- Gallery Preview Section -->
   <section class="py-20 bg-primary">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
-        <h2 class="section-title text-white">Galería</h2>
+        <h2 class="section-title text-white">{t('galleryTitle')}</h2>
         <p class="section-subtitle mx-auto mt-4 text-white/80">
-          Un vistazo a la belleza de nuestro hotel y la ciudad
+          {t('gallerySubtitle')}
         </p>
       </div>
 
@@ -363,24 +394,23 @@ import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
     </div>
   </section>
 
-  <!-- CTA Section -->
   <section class="py-20 bg-accent">
     <div class="max-w-4xl mx-auto px-4 text-center">
       <h2 class="font-display text-3xl md:text-5xl font-bold text-white mb-6">
-        ¿Listo para vivir la experiencia Majestic?
+        {t('ctaTitle')}
       </h2>
       <p class="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-        Resuelve ahora y vivirás la magia colonial de Cuenca en el corazón de la ciudad. Nuestro equipo está listo para atenderte.
+        {t('ctaDesc')}
       </p>
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
         <a href="https://wa.me/593980098757" target="_blank" class="bg-white text-accent hover:bg-gray-100 font-bold py-4 px-8 rounded-lg transition-all duration-300 text-lg">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" viewBox="0 0 24 24" fill="currentColor">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
           </svg>
-          Reservar por WhatsApp
+          {t('whatsapp')}
         </a>
-        <a href="/contacto" class="border-2 border-white text-white hover:bg-white hover:text-accent font-bold py-4 px-8 rounded-lg transition-all duration-300 text-lg">
-          Contactar por Email
+        <a href={contactoLink} class="border-2 border-white text-white hover:bg-white hover:text-accent font-bold py-4 px-8 rounded-lg transition-all duration-300 text-lg">
+          {t('email')}
         </a>
       </div>
     </div>

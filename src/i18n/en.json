@@ -1,0 +1,252 @@
+{
+  "common": {
+    "hotelName": "Hotel Majestic II",
+    "bookNow": "Book Now",
+    "contact": "Contact",
+    "phone": "+593 980098757",
+    "email": "reservations@hotelmajestic2.com",
+    "address": "Gran Colombia Street 2-07 and Manuel Vega, Cuenca",
+    "seeMore": "See more",
+    "days": "days",
+    "years": "Years",
+    "yearsOf": "Years of",
+    "excellence": "excellence",
+    "rating": "Rating",
+    "ratingOnGoogle": "4.8/5 on Google",
+    "type": "Type"
+  },
+  "nav": {
+    "home": "Home",
+    "rooms": "Rooms",
+    "gastronomy": "Gastronomy",
+    "experiences": "Experiences",
+    "contact": "Contact",
+    "bookByWhatsApp": "Book via WhatsApp"
+  },
+  "home": {
+    "title": "Hotel Majestic II",
+    "subtitle": "Experience colonial elegance in the heart of Cuenca. Where history meets modern comfort.",
+    "hero": {
+      "cta": "Book Now",
+      "services": "View Services"
+    },
+    "services": {
+      "title": "Our Services",
+      "subtitle": "Enjoy modern amenities while immersing yourself in the colonial essence of Cuenca",
+      "wifi": {
+        "title": "Free WiFi",
+        "description": "High-speed internet in all hotel areas"
+      },
+      "breakfast": {
+        "title": "Breakfast Included",
+        "description": "Delicious buffet breakfast with local and international options"
+      },
+      "parking": {
+        "title": "Parking",
+        "description": "Private guarded parking 24 hours"
+      },
+      "concierge": {
+        "title": "Concierge",
+        "description": "Personalized assistance for tours, transport and recommendations"
+      }
+    },
+    "rooms": {
+      "title": "Featured Rooms",
+      "subtitle": "Find the perfect space for your stay in Cuenca",
+      "viewAll": "View All Rooms",
+      "standard": {
+        "title": "Standard Room",
+        "description": "Cozy room with queen bed and city view."
+      },
+      "double": {
+        "title": "Double Room",
+        "description": "Spacious room with two queen beds, ideal for families."
+      },
+      "suite": {
+        "title": "Presidential Suite",
+        "description": "Colonial luxury with private living room and colonial balcony."
+      }
+    },
+    "about": {
+      "title": "History and Colonial Elegance",
+      "description": "Located in the colonial heart of Cuenca, Hotel Majestic II combines 19th-century historical architecture with modern amenities. Our privileged location allows you to explore the cobblestone streets, colonial churches and rich culture of the 'Athens of Ecuador'.",
+      "group": "We are part of Hospitality & Hotels Group, a hotel chain committed to service excellence and authenticity of the Ecuadorian experience.",
+      "location": "Location",
+      "locationValue": "Historic Center",
+      "contactUs": "Contact Us"
+    },
+    "experiences": {
+      "title": "Discover Cuenca",
+      "subtitle": "Explore the cultural and tourist treasures surrounding our hotel",
+      "viewAll": "View All Experiences"
+    },
+    "testimonials": {
+      "title": "What Our Guests Say",
+      "subtitle": "Testimonials from those who have experienced the hospitality of Hotel Majestic II"
+    },
+    "gallery": {
+      "title": "Gallery",
+      "subtitle": "A glimpse into the beauty of our hotel and the city"
+    },
+    "cta": {
+      "title": "Ready to experience Majestic?",
+      "description": "Book now and experience the colonial magic of Cuenca in the heart of the city. Our team is ready to assist you.",
+      "whatsapp": "Book via WhatsApp",
+      "email": "Contact via Email"
+    }
+  },
+  "rooms": {
+    "title": "Our Rooms",
+    "subtitle": "Discover the perfect space for your stay in Cuenca",
+    "features": "Amenities",
+    "capacity": "Capacity",
+    "size": "Size",
+    "pricePerNight": "per night",
+    "viewDetails": "View details",
+    "reserve": "Reserve",
+    "standard": {
+      "title": "Standard Room",
+      "description": "Cozy room with queen bed and city view.",
+      "features": ["Free WiFi", "Flat-screen TV", "Air conditioning", "Private bathroom"]
+    },
+    "double": {
+      "title": "Double Room",
+      "description": "Spacious room with two queen beds, ideal for families.",
+      "features": ["Free WiFi", "Flat-screen TV", "Minibar", "Safe"]
+    },
+    "suite": {
+      "title": "Presidential Suite",
+      "description": "Colonial luxury with private living room and colonial balcony.",
+      "features": ["Living room", "Balcony", "Jacuzzi", "Room service"]
+    }
+  },
+  "gastronomy": {
+    "title": "Cuenca Gastronomy",
+    "subtitle": "Explore the authentic flavors of Ecuador",
+    "restaurant": "Restaurant",
+    "typicalDishes": "Must-try Typical Dishes",
+    "schedule": "Opening hours",
+    "breakfast": "Breakfast",
+    "lunch": "Lunch",
+    "dinner": "Dinner",
+    "everyDay": "Every day",
+    "nearby": {
+      "title": "Nearby Restaurants",
+      "subtitle": "The best restaurants near the hotel"
+    }
+  },
+  "experiences": {
+    "title": "Experiences",
+    "subtitle": "Discover the best of Cuenca and its surroundings",
+    "nearbyLocations": "Nearby Locations",
+    "fromAirport": "From the airport:",
+    "fromCenter": "From the center:",
+    "fromBusTerminal": "From the bus terminal:",
+    "taxi10min": "10 min by taxi ($3-5)",
+    "taxi15min": "15 min by taxi ($5-8)",
+    "walking5min": "On foot (5 min)"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "We are here to help you",
+    "sendMessage": "Send us a message",
+    "weRespond": "We respond within 24h",
+    "immediateResponse": "Immediate response",
+    "form": {
+      "fullName": "Full name *",
+      "email": "Email *",
+      "subject": "Subject *",
+      "message": "Message *",
+      "selectSubject": "Select a subject",
+      "generalInquiry": "General inquiry",
+      "groupReservations": "Group events",
+      "other": "Other",
+      "send": "Send message"
+    },
+    "info": {
+      "reception": "Reception",
+      "receptionSchedule": "24 hours",
+      "whatsapp": "WhatsApp",
+      "location": "Our location"
+    }
+  },
+  "booking": {
+    "checkin": "Check-in:",
+    "checkout": "Check-out:",
+    "dates": "Stay dates",
+    "selectDates": "Select check-in and check-out",
+    "adults": "Adults",
+    "selectAdults": "Select adults",
+    "children": "Children",
+    "selectChildren": "Select children",
+    "rooms": "Rooms",
+    "selectRooms": "Select rooms",
+    "childAge": "Age of each child",
+    "extras": "Extras and preferences",
+    "breakfast": "Breakfast",
+    "breakfastDesc": "Add breakfast to reservation",
+    "parking": "Parking",
+    "parkingDesc": "Include parking space",
+    "specialRequest": "Special requests",
+    "specialRequestDesc": "I want to leave a note",
+    "specialNote": "Special note",
+    "specialNotePlaceholder": "Tell us if you need anything in particular...",
+    "vehicle": {
+      "title": "Vehicles",
+      "addVehicle": "Add vehicle",
+      "vehicleType": "Type",
+      "plate": "License plate",
+      "maxVehicles": "Maximum 6 vehicles"
+    },
+    "group": {
+      "title": "Group Reservation (minimum 8 adults)",
+      "exit": "Exit group",
+      "groupDates": "Check-in and check-out (group)",
+      "adults18": "Adults (+18 years)",
+      "teens": "Teenagers (<18 years)",
+      "kids": "Children (<12 years)",
+      "infants": "Babies (<5 years)",
+      "distribution": "Distribution type",
+      "selectDistribution": "Select distribution",
+      "sharedBeds": "Shared beds",
+      "sharedRooms": "Shared rooms",
+      "individualRooms": "Individual rooms"
+    },
+    "submit": "Check availability",
+    "policy": {
+      "under12": "Children under 12 years old free",
+      "under12Docs": "Children under 12, must present ID card or passport at registration.",
+      "fullFare12": "12 years or older: full rate applies.",
+      "freeCancellation": "Free cancellation up to 48h before",
+      "noPets": "No pets allowed"
+    },
+    "validation": {
+      "selectDates": "Select a check-in and check-out date.",
+      "selectAdults": "Select the number of adults.",
+      "selectRooms": "Select the number of rooms.",
+      "enterChildAge": "You must enter the age of child {i}.",
+      "childAgeRange": "The age of child {i} must be between 0 and 17 years.",
+      "minGroupAdults": "Group reservations require a minimum of {n} adults",
+      "parkingVehicle": "If you select parking, you must add at least one vehicle with its license plate.",
+      "minSpecialRequest": "Special requests must be at least 25 characters."
+    }
+  },
+  "footer": {
+    "quickLinks": "Quick Links",
+    "rooms": "Rooms",
+    "gastronomy": "Gastronomy",
+    "experiences": "Experiences",
+    "contact": "Contact",
+    "contactInfo": "Contact",
+    "copyright": "© {year} Hotel Majestic II by HHG. All rights reserved."
+  },
+  "commonUI": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  }
+}

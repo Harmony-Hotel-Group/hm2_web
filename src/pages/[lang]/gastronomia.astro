@@ -1,28 +1,43 @@
 ---
 import Layout from '@layouts/Layout.astro';
 
-const currentLang = 'es';
-const isEn = false;
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } }
+  ];
+}
+
+const { lang } = Astro.params;
+const currentLang = lang || 'es';
+const isEn = currentLang === 'en';
 
 const dishes = [
   {
-    name: 'Encebollado',
-    description: 'Sopa tradicional de pescado en caldo de tomate con cebolla morada, yuca y aliño. El plato favorito de los ecuatorianos.',
+    name: isEn ? 'Encebollado' : 'Encebollado',
+    description: isEn 
+      ? 'Traditional fish soup in tomato broth with purple onion, yuca and seasoning. The favorite dish of Ecuadorians.'
+      : 'Sopa tradicional de pescado en caldo de tomate con cebolla morada, yuca y aliño. El plato favorito de los ecuatorianos.',
     image: 'https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&w=600&q=80'
   },
   {
-    name: 'Cuy Asado',
-    description: 'Cuy típico asado al horno con papas y maiz. Delicia tradicional de la región andina.',
+    name: isEn ? 'Roasted Guinea Pig' : 'Cuy Asado',
+    description: isEn 
+      ? 'Typical roasted guinea pig with potatoes and corn. Delicacy of the Andean region.'
+      : 'Cuy típico asado al horno con papas y maiz. Delicia tradicional de la región andina.',
     image: 'https://images.unsplash.com/photo-1600891964092-4316c2888cda?auto=format&fit=crop&w=600&q=80'
   },
   {
-    name: 'Llapingacho',
-    description: 'Patatas escurdidas con queso, chorizo y huevo frito. Un desayuno típico quiteño.',
+    name: isEn ? 'Llapingacho' : 'Llapingacho',
+    description: isEn 
+      ? 'Mashed potatoes with cheese, chorizo and fried egg. A typical Quito breakfast.'
+      : 'Patatas escurdidas con queso, chorizo y huevo frito. Un desayuno típico quiteño.',
     image: 'https://images.unsplash.com/photo-1604152135912-04a022e23696?auto=format&fit=crop&w=600&q=80'
   },
   {
-    name: 'Hornado',
-    description: 'Cerdo asado lentamente hasta obtener una皮 crujiente. Acompañado de mote y llakta.',
+    name: isEn ? 'Hornado' : 'Hornado',
+    description: isEn 
+      ? 'Pork roasted slowly until achieving a crispy skin. Served with mote and llakta.'
+      : 'Cerdo asado lentamente hasta obtener una皮 crujiente. Acompañado de mote y llakta.',
     image: 'https://images.unsplash.com/photo-1606728035253-49e8a23136de?auto=format&fit=crop&w=600&q=80'
   }
 ];
@@ -30,45 +45,62 @@ const dishes = [
 const restaurants = [
   {
     name: 'Tiestos Café',
-    type: 'Café & Postres',
-    description: 'Café artístico con vista a la catedral. Excelentes pasteles y coffee.',
-    distance: '2 min'
+    type: isEn ? 'Café & Desserts' : 'Café & Postres',
+    description: isEn 
+      ? 'Artistic café with cathedral view. Excellent pastries and coffee.'
+      : 'Café artístico con vista a la catedral. Excelentes pasteles y coffee.',
+    distance: isEn ? '2 min' : '2 min'
   },
   {
     name: 'Molle 1841',
-    type: 'Gastronomía Ecuatoriana',
-    description: 'Restaurante de autor con cocina tradicional reinventada. Reservación recomendada.',
-    distance: '5 min'
+    type: isEn ? 'Ecuadorian Gastronomy' : 'Gastronomía Ecuatoriana',
+    description: isEn 
+      ? 'Author restaurant with reinvented traditional cuisine. Reservation recommended.'
+      : 'Restaurante de autor con cocina tradicional reinventada. Reservación recomendada.',
+    distance: isEn ? '5 min' : '5 min'
   },
   {
     name: 'Govindas',
-    type: 'Vegetariano',
-    description: 'Comida vegetariana y vegana con opciones orgánicas. Ambiente tranquilo.',
-    distance: '3 min'
+    type: isEn ? 'Vegetarian' : 'Vegetariano',
+    description: isEn 
+      ? 'Vegetarian and vegan food with organic options. Quiet atmosphere.'
+      : 'Comida vegetariana y vegana con opciones orgánicas. Ambiente tranquilo.',
+    distance: isEn ? '3 min' : '3 min'
   },
   {
-    name: 'Mercado 10 de Agosto',
-    type: 'Mercado Local',
-    description: 'Mercado tradicional con puestos de comida local. Auténtica experiencia culinaria.',
-    distance: '8 min'
+    name: isEn ? 'Mercado 10 de Agosto' : 'Mercado 10 de Agosto',
+    type: isEn ? 'Local Market' : 'Mercado Local',
+    description: isEn 
+      ? 'Traditional market with local food stalls. Authentic culinary experience.'
+      : 'Mercado tradicional con puestos de comida local. Auténtica experiencia culinaria.',
+    distance: isEn ? '8 min' : '8 min'
   }
 ];
 
-const title = 'Gastronomía de Cuenca';
-const subtitle = 'Explora los sabores auténticos del Ecuador';
-const introTitle = 'La Cocina Quiteña';
-const introDesc = 'Cuenca es conocida como la capital gastronómica del Ecuador. Su cocina refleja la fusión de tradiciones indígenas y españolas, creando platos únicos que no encontrarás en ningún otro lugar del mundo.';
-const dishesTitle = 'Platos Típicos Imperdibles';
-const restaurantsTitle = 'Restaurantes Cercanos';
-const restaurantsSubtitle = 'Los mejores lugares para comer cerca del hotel, recomendados por nuestro equipo';
-const breakfastTitle = 'Desayuno Incluido';
-const breakfastDesc = 'Disfruta de nuestro desayuno tipo buffet todas las mañanas con opciones calientes, frutas frescas, panadería local y más. Disponible de 7:00 a 10:00.';
-const helpTitle = '¿Necesitas recomendaciones?';
-const helpDesc = 'Nuestro equipo puede ayudarte a reservar mesas y recomendar los mejores lugares.';
-const ctaBtn = 'Preguntar por WhatsApp';
+const title = isEn ? 'Gastronomy of Cuenca' : 'Gastronomía de Cuenca';
+const subtitle = isEn ? 'Explore the authentic flavors of Ecuador' : 'Explora los sabores auténticos del Ecuador';
+const introTitle = isEn ? 'The Quito Kitchen' : 'La Cocina Quiteña';
+const introDesc = isEn 
+  ? 'Cuenca is known as the gastronomic capital of Ecuador. Its cuisine reflects the fusion of indigenous and Spanish traditions, creating unique dishes you won\'t find anywhere else in the world.'
+  : 'Cuenca es conocida como la capital gastronómica del Ecuador. Su cocina refleja la fusión de tradiciones indígenas y españolas, creando platos únicos que no encontrarás en ningún otro lugar del mundo.';
+const dishesTitle = isEn ? 'Must-try Typical Dishes' : 'Platos Típicos Imperdibles';
+const restaurantsTitle = isEn ? 'Nearby Restaurants' : 'Restaurantes Cercanos';
+const restaurantsSubtitle = isEn 
+  ? 'The best places to eat near the hotel, recommended by our team'
+  : 'Los mejores lugares para comer cerca del hotel, recomendados por nuestro equipo';
+const breakfastTitle = isEn ? 'Breakfast Included' : 'Desayuno Incluido';
+const breakfastDesc = isEn 
+  ? 'Enjoy our buffet breakfast every morning with hot options, fresh fruits, local bakery and more. Available from 7:00 to 10:00.'
+  : 'Disfruta de nuestro desayuno tipo buffet todas las mañanas con opciones calientes, frutas frescas, panadería local y más. Disponible de 7:00 a 10:00.';
+const helpTitle = isEn ? 'Need recommendations?' : '¿Necesitas recomendaciones?';
+const helpDesc = isEn 
+  ? 'Our team can help you reserve tables and recommend the best places.'
+  : 'Nuestro equipo puede ayudarte a reservar mesas y recomendar los mejores lugares.';
+const ctaBtn = isEn ? 'Ask via WhatsApp' : 'Preguntar por WhatsApp';
 ---
 
 <Layout lang={currentLang} title={title}>
+  <!-- Hero -->
   <section class="relative h-64 md:h-80 flex items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
       <img 
@@ -84,9 +116,10 @@ const ctaBtn = 'Preguntar por WhatsApp';
     </div>
   </section>
 
+  <!-- Intro -->
   <section class="py-16 bg-background">
     <div class="max-w-4xl mx-auto px-4 text-center">
-      <span class="text-accent font-accent text-lg tracking-widest uppercase">Sabores del Ecuador</span>
+      <span class="text-accent font-accent text-lg tracking-widest uppercase">{isEn ? 'Flavors of Ecuador' : 'Sabores del Ecuador'}</span>
       <h2 class="section-title mt-4">{introTitle}</h2>
       <p class="text-text-light text-lg leading-relaxed mt-4">
         {introDesc}
@@ -94,6 +127,7 @@ const ctaBtn = 'Preguntar por WhatsApp';
     </div>
   </section>
 
+  <!-- Typical Dishes -->
   <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 class="section-title text-center mb-12">{dishesTitle}</h2>
@@ -118,6 +152,7 @@ const ctaBtn = 'Preguntar por WhatsApp';
     </div>
   </section>
 
+  <!-- Nearby Restaurants -->
   <section class="py-16 bg-background-warm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 class="section-title text-center mb-4">{restaurantsTitle}</h2>
@@ -149,6 +184,7 @@ const ctaBtn = 'Preguntar por WhatsApp';
     </div>
   </section>
 
+  <!-- Breakfast Info -->
   <section class="py-16 bg-white">
     <div class="max-w-4xl mx-auto px-4 text-center">
       <div class="bg-accent rounded-2xl p-8 text-white">
@@ -163,6 +199,7 @@ const ctaBtn = 'Preguntar por WhatsApp';
     </div>
   </section>
 
+  <!-- CTA -->
   <section class="py-16 bg-primary">
     <div class="max-w-4xl mx-auto px-4 text-center">
       <h2 class="font-display text-2xl font-bold text-white mb-4">{helpTitle}</h2>

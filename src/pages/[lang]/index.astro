@@ -6,57 +6,106 @@ import RoomCard from '@organisms/cards/RoomCard.astro';
 import TestimonialCard from '@organisms/cards/TestimonialCard.astro';
 import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
 
-const currentLang = 'es';
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } }
+  ];
+}
+
+const { lang } = Astro.params;
+const currentLang = lang || 'es';
 
 const t = (key: string) => {
-  const translations: Record<string, string> = {
-    heroTitle: 'Hotel Majestic II',
-    heroSubtitle: 'Experimenta la elegancia colonial en el corazón de Cuenca. Donde la historia meets la comodidad moderna.',
-    cta: 'Reservar Ahora',
-    servicesBtn: 'Ver Servicios',
-    servicesTitle: 'Nuestros Servicios',
-    servicesSubtitle: 'Disfruta de comodidades modernas mientras te sumerges en la esencia colonial de Cuenca',
-    wifiTitle: 'WiFi Gratis',
-    wifiDesc: 'Conexión de alta velocidad en todas las áreas del hotel',
-    breakfastTitle: 'Desayuno incluido',
-    breakfastDesc: 'Delicioso desayuno tipo buffet con opciones locales e internacionales',
-    parkingTitle: 'Parqueadero',
-    parkingDesc: 'Estacionamiento privado vigilado las 24 horas',
-    conciergeTitle: 'Concierge',
-    conciergeDesc: 'Asistencia personalizada para tours, transporte y recomendaciones',
-    roomsTitle: 'Habitaciones Destacadas',
-    roomsSubtitle: 'Encuentra el espacio perfecto para tu estancia en Cuenca',
-    viewAllRooms: 'Ver Todas las Habitaciones',
-    aboutTitle: 'Historia y Elegancia Colonial',
-    aboutDesc: 'Ubicado en el corazón colonial de Cuenca, Hotel Majestic II combina la arquitectura histórica del siglo XIX con comodidades modernas.',
-    aboutGroup: 'Formamos parte de Hospitality & Hotels Group, una cadena hotelera comprometida con la excelencia.',
-    location: 'Ubicación',
-    locationValue: 'Centro Histórico',
-    rating: '4.8/5 en Google',
-    contactUs: 'Contáctanos',
-    experiencesTitle: 'Descubre Cuenca',
-    experiencesSubtitle: 'Explora los tesoros culturales y turísticos que rodean nuestro hotel',
-    viewAllExperiences: 'Ver Todas las Experiencias',
-    testimonialsTitle: 'Lo que dicen nuestros huéspedes',
-    testimonialsSubtitle: 'Testimonios de quienes han experimentado la hospitalidad del Hotel Majestic II',
-    galleryTitle: 'Galería',
-    gallerySubtitle: 'Un vistazo a la belleza de nuestro hotel y la ciudad',
-    ctaTitle: '¿Listo para vivir la experiencia Majestic?',
-    ctaDesc: 'Reserva ahora y vivirás la magia colonial de Cuenca en el corazón de la ciudad.',
-    whatsapp: 'Reservar por WhatsApp',
-    email: 'Contactar por Email',
-    yearsOfExcellence: '10+Años deexcelencia'
+  const translations: Record<string, Record<string, string>> = {
+    es: {
+      heroTitle: 'Hotel Majestic II',
+      heroSubtitle: 'Experimenta la elegancia colonial en el corazón de Cuenca. Donde la historia meets la comodidad moderna.',
+      cta: 'Reservar Ahora',
+      servicesBtn: 'Ver Servicios',
+      servicesTitle: 'Nuestros Servicios',
+      servicesSubtitle: 'Disfruta de comodidades modernas mientras te sumerges en la esencia colonial de Cuenca',
+      wifiTitle: 'WiFi Gratis',
+      wifiDesc: 'Conexión de alta velocidad en todas las áreas del hotel',
+      breakfastTitle: 'Desayuno incluido',
+      breakfastDesc: 'Delicioso desayuno tipo buffet con opciones locales e internacionales',
+      parkingTitle: 'Parqueadero',
+      parkingDesc: 'Estacionamiento privado vigilado las 24 horas',
+      conciergeTitle: 'Concierge',
+      conciergeDesc: 'Asistencia personalizada para tours, transporte y recomendaciones',
+      roomsTitle: 'Habitaciones Destacadas',
+      roomsSubtitle: 'Encuentra el espacio perfecto para tu estancia en Cuenca',
+      viewAllRooms: 'Ver Todas las Habitaciones',
+      aboutTitle: 'Historia y Elegancia Colonial',
+      aboutDesc: 'Ubicado en el corazón colonial de Cuenca, Hotel Majestic II combina la arquitectura histórica del siglo XIX con comodidades modernas.',
+      aboutGroup: 'Formamos parte de Hospitality & Hotels Group, una cadena hotelera comprometida con la excelencia.',
+      location: 'Ubicación',
+      locationValue: 'Centro Histórico',
+      rating: '4.8/5 en Google',
+      contactUs: 'Contáctanos',
+      experiencesTitle: 'Descubre Cuenca',
+      experiencesSubtitle: 'Explora los tesoros culturales y turísticos que rodean nuestro hotel',
+      viewAllExperiences: 'Ver Todas las Experiencias',
+      testimonialsTitle: 'Lo que dicen nuestros huéspedes',
+      testimonialsSubtitle: 'Testimonios de quienes han experimentado la hospitalidad del Hotel Majestic II',
+      galleryTitle: 'Galería',
+      gallerySubtitle: 'Un vistazo a la belleza de nuestro hotel y la ciudad',
+      ctaTitle: '¿Listo para vivir la experiencia Majestic?',
+      ctaDesc: 'Resuelve ahora y vivirás la magia colonial de Cuenca en el corazón de la ciudad.',
+      whatsapp: 'Reservar por WhatsApp',
+      email: 'Contactar por Email',
+      yearsOfExcellence: '10+Años deexcelencia'
+    },
+    en: {
+      heroTitle: 'Hotel Majestic II',
+      heroSubtitle: 'Experience colonial elegance in the heart of Cuenca. Where history meets modern comfort.',
+      cta: 'Book Now',
+      servicesBtn: 'View Services',
+      servicesTitle: 'Our Services',
+      servicesSubtitle: 'Enjoy modern amenities while immersing yourself in the colonial essence of Cuenca',
+      wifiTitle: 'Free WiFi',
+      wifiDesc: 'High-speed internet connection in all hotel areas',
+      breakfastTitle: 'Breakfast Included',
+      breakfastDesc: 'Delicious buffet breakfast with local and international options',
+      parkingTitle: 'Parking',
+      parkingDesc: 'Private guarded parking 24 hours',
+      conciergeTitle: 'Concierge',
+      conciergeDesc: 'Personalized assistance for tours, transport and recommendations',
+      roomsTitle: 'Featured Rooms',
+      roomsSubtitle: 'Find the perfect space for your stay in Cuenca',
+      viewAllRooms: 'View All Rooms',
+      aboutTitle: 'History and Colonial Elegance',
+      aboutDesc: 'Located in the colonial heart of Cuenca, Hotel Majestic II combines 19th-century historical architecture with modern amenities.',
+      aboutGroup: 'We are part of Hospitality & Hotels Group, a hotel chain committed to service excellence.',
+      location: 'Location',
+      locationValue: 'Historic Center',
+      rating: '4.8/5 on Google',
+      contactUs: 'Contact Us',
+      experiencesTitle: 'Discover Cuenca',
+      experiencesSubtitle: 'Explore the cultural and tourist treasures surrounding our hotel',
+      viewAllExperiences: 'View All Experiences',
+      testimonialsTitle: 'What Our Guests Say',
+      testimonialsSubtitle: 'Testimonials from those who have experienced the hospitality of Hotel Majestic II',
+      galleryTitle: 'Gallery',
+      gallerySubtitle: 'A glimpse into the beauty of our hotel and the city',
+      ctaTitle: 'Ready to experience Majestic?',
+      ctaDesc: 'Book now and experience the colonial magic of Cuenca in the heart of the city.',
+      whatsapp: 'Book via WhatsApp',
+      email: 'Contact via Email',
+      yearsOfExcellence: '10+Years ofexcellence'
+    }
   };
-  return translations[key] || key;
+  return translations[currentLang]?.[key] || key;
 };
 
-const roomLink = '/habitaciones';
-const experienciasLink = '/experiencias';
-const contactoLink = '/contacto';
+const roomLink = currentLang === 'en' ? '/en/habitaciones' : '/habitaciones';
+const experienciasLink = currentLang === 'en' ? '/en/experiencias' : '/experiencias';
+const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
 ---
 
-<Layout lang={currentLang} title="Inicio">
+<Layout lang={currentLang} title={currentLang === 'en' ? 'Home' : 'Inicio'}>
+  <!-- Hero Section -->
   <section class="relative min-h-screen flex flex-col justify-start pt-20 md:pt-24 overflow-hidden">
+    <!-- Background Image -->
     <div class="absolute inset-0 z-0">
       <img 
         src="https://images.unsplash.com/photo-1566073771259-6a8506079945?auto=format&fit=crop&w=1920&q=80" 
@@ -66,21 +115,23 @@ const contactoLink = '/contacto';
       <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
     </div>
 
+    <!-- Main Content: Centered in available space -->
     <div class="relative z-10 flex-grow flex items-center justify-center px-4 py-8">
       <div class="max-w-4xl mx-auto text-center">
-        <!-- <div class="animate-fade-in mb-6">
+        <!-- Logo Image -->
+        <div class="animate-fade-in mb-6">
           <img 
             src="/logo.png" 
             alt="Hotel Majestic II Logo" 
             class="mx-auto w-[25%]"
           />
-        </div> -->
+        </div>
         
         <h1 class="animate-slide-up font-display text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
           {t('heroTitle')}
         </h1>
         
-        <p class="animate-slide-up font-accent text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
+        <p class="animate-slide-up animate-delay-100 font-accent text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
           {t('heroSubtitle')}
         </p>
 
@@ -99,12 +150,14 @@ const contactoLink = '/contacto';
       </div>
     </div>
 
+    <!-- Booking Bar: Bottom of Hero, separated from navbar -->
     <div class="relative z-10 pb-8 px-4">
       <BookingBar>
         <BookingForm variant="hero" />
       </BookingBar>
     </div>
 
+    <!-- Scroll Indicator -->
     <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 animate-bounce">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
@@ -112,6 +165,7 @@ const contactoLink = '/contacto';
     </div>
   </section>
 
+  <!-- Services Section -->
   <section id="servicios" class="py-20 bg-background-warm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
@@ -122,6 +176,7 @@ const contactoLink = '/contacto';
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- WiFi -->
         <div class="bg-white rounded-xl p-8 shadow-md hover:shadow-lg transition-shadow text-center group">
           <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -133,6 +188,7 @@ const contactoLink = '/contacto';
           <p class="text-text-light">{t('wifiDesc')}</p>
         </div>
 
+        <!-- Desayuno -->
         <div class="bg-white rounded-xl p-8 shadow-md hover:shadow-lg transition-shadow text-center group">
           <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -143,6 +199,7 @@ const contactoLink = '/contacto';
           <p class="text-text-light">{t('breakfastDesc')}</p>
         </div>
 
+        <!-- Estacionamiento -->
         <div class="bg-white rounded-xl p-8 shadow-md hover:shadow-lg transition-shadow text-center group">
           <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -153,6 +210,7 @@ const contactoLink = '/contacto';
           <p class="text-text-light">{t('parkingDesc')}</p>
         </div>
 
+        <!-- Conserjería -->
         <div class="bg-white rounded-xl p-8 shadow-md hover:shadow-lg transition-shadow text-center group">
           <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -166,6 +224,7 @@ const contactoLink = '/contacto';
     </div>
   </section>
 
+  <!-- Featured Rooms Section -->
   <section id="habitaciones" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
@@ -177,35 +236,35 @@ const contactoLink = '/contacto';
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <RoomCard 
-          title="Habitación Estándar"
+          title={currentLang === 'en' ? 'Standard Room' : 'Habitación Estándar'}
           price={65}
           category="estandar"
           capacity={2}
           size="25m²"
-          description="Habitación cómoda con cama queen y vista a la ciudad."
-          features={["WiFi gratis", "TV pantalla plana", "Aire acondicionado", "Baño privado"]}
+          description={currentLang === 'en' ? 'Cozy room with queen bed and city view.' : 'Habitación cómoda con cama queen y vista a la ciudad.'}
+          features={currentLang === 'en' ? ["Free WiFi", "Flat-screen TV", "Air conditioning", "Private bathroom"] : ["WiFi gratis", "TV pantalla plana", "Aire acondicionado", "Baño privado"]}
           popular={false}
         />
         
         <RoomCard 
-          title="Habitación Doble"
+          title={currentLang === 'en' ? 'Double Room' : 'Habitación Doble'}
           price={85}
           category="doble"
           capacity={4}
           size="35m²"
-          description="Espaciosa habitación con dos camas queen, ideal para familias."
-          features={["WiFi gratis", "TV pantalla plana", "Minibar", "Caja fuerte"]}
+          description={currentLang === 'en' ? 'Spacious room with two queen beds, ideal for families.' : 'Espaciosa habitación con dos camas queen, ideal para familias.'}
+          features={currentLang === 'en' ? ["Free WiFi", "Flat-screen TV", "Minibar", "Safe"] : ["WiFi gratis", "TV pantalla plana", "Minibar", "Caja fuerte"]}
           popular={true}
         />
         
         <RoomCard 
-          title="Suite Presidencial"
+          title={currentLang === 'en' ? 'Presidential Suite' : 'Suite Presidencial'}
           price={150}
           category="suite"
           capacity={2}
           size="55m²"
-          description="Lujo colonial con sala de estar privada y balcón colonial."
-          features={["Sala de estar", "Balcón", "Jacuzzi", "Servicio a la habitación"]}
+          description={currentLang === 'en' ? 'Colonial luxury with private living room and colonial balcony.' : 'Lujo colonial con sala de estar privada y balcón colonial.'}
+          features={currentLang === 'en' ? ["Living room", "Balcony", "Jacuzzi", "Room service"] : ["Sala de estar", "Balcón", "Jacuzzi", "Servicio a la habitación"]}
           popular={false}
         />
       </div>
@@ -221,6 +280,7 @@ const contactoLink = '/contacto';
     </div>
   </section>
 
+  <!-- About Section -->
   <section class="py-20 bg-background bg-pattern">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -236,7 +296,7 @@ const contactoLink = '/contacto';
         </div>
 
         <div>
-          <span class="text-accent font-accent text-lg tracking-widest uppercase">Sobre Nosotros</span>
+          <span class="text-accent font-accent text-lg tracking-widest uppercase">{currentLang === 'en' ? 'About Us' : 'Sobre Nosotros'}</span>
           <h2 class="section-title mt-2">{t('aboutTitle')}</h2>
           <p class="text-text-light text-lg leading-relaxed mb-6">
             {t('aboutDesc')}
@@ -261,7 +321,7 @@ const contactoLink = '/contacto';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
               </svg>
               <div>
-                <div class="font-display font-bold text-lg text-primary">Calificación</div>
+                <div class="font-display font-bold text-lg text-primary">{currentLang === 'en' ? 'Rating' : 'Calificación'}</div>
                 <div class="text-text-light text-sm">{t('rating')}</div>
               </div>
             </div>
@@ -275,6 +335,7 @@ const contactoLink = '/contacto';
     </div>
   </section>
 
+  <!-- Experiences Section -->
   <section id="experiencias" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
@@ -286,24 +347,24 @@ const contactoLink = '/contacto';
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <ExperienceCard 
-          title="Catedral de la Inmaculada"
-          description="La catedral más icónica del Ecuador con sus domos azules y arquitectura neoclásica."
-          distance="5 min caminando"
-          href="/experiencias#catedral"
+          title={currentLang === 'en' ? 'Cathedral of the Immaculate' : 'Catedral de la Inmaculada'}
+          description={currentLang === 'en' ? 'The most iconic cathedral in Ecuador with its blue domes and neoclassical architecture.' : 'La catedral más icónica del Ecuador con sus domos azules y arquitectura neoclásica.'}
+          distance={currentLang === 'en' ? '5 min walking' : '5 min caminando'}
+          href={`${experienciasLink}#catedral`}
         />
         
         <ExperienceCard 
-          title="Parque Calderón de Barca"
-          description="El corazón de la ciudad, rodeado de cafés, restaurantes y vida local."
-          distance="3 min caminando"
-          href="/experiencias#parque"
+          title={currentLang === 'en' ? 'Parque Calderón de Barca' : 'Parque Calderón de Barca'}
+          description={currentLang === 'en' ? 'The heart of the city, surrounded by cafes, restaurants and local life.' : 'El corazón de la ciudad, rodeado de cafés, restaurantes y vida local.'}
+          distance={currentLang === 'en' ? '3 min walking' : '3 min caminando'}
+          href={`${experienciasLink}#parque`}
         />
         
         <ExperienceCard 
-          title="Museo Pumapungo"
-          description="Descubre la historia Cañari e Inca en este importante sitio arqueológico."
-          distance="15 min caminando"
-          href="/experiencias#pumapungo"
+          title={currentLang === 'en' ? 'Pumapungo Museum' : 'Museo Pumapungo'}
+          description={currentLang === 'en' ? 'Discover the Cañari and Inca history at this important archaeological site.' : 'Descubre la historia Cañari e Inca en este importante sitio arqueológico.'}
+          distance={currentLang === 'en' ? '15 min walking' : '15 min caminando'}
+          href={`${experienciasLink}#pumapungo`}
         />
       </div>
 
@@ -318,6 +379,7 @@ const contactoLink = '/contacto';
     </div>
   </section>
 
+  <!-- Testimonials Section -->
   <section class="py-20 bg-background-warm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
@@ -329,29 +391,30 @@ const contactoLink = '/contacto';
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <TestimonialCard 
-          name="María González"
-          date="Enero 2024"
+          name={currentLang === 'en' ? 'María González' : 'María González'}
+          date={currentLang === 'en' ? 'January 2024' : 'Enero 2024'}
           rating={5}
-          text="La ubicación es perfecta para explorar el centro histórico. El personal fue extremamente amable y nos ayudó a planificar nuestro tour por Cuenca. ¡Totalmente recomendado!"
+          text={currentLang === 'en' ? 'The location is perfect for exploring the historic center. The staff was extremely helpful and helped us plan our tour of Cuenca. Highly recommended!' : 'La ubicación es perfecta para explorar el centro histórico. El personal fue extremadamente amable y nos ayudó a planificar nuestro tour por Cuenca. ¡Totalmente recomendado!'}
         />
         
         <TestimonialCard 
           name="John Smith"
-          date="Diciembre 2023"
+          date={currentLang === 'en' ? 'December 2023' : 'Diciembre 2023'}
           rating={5}
-          text="Beautiful colonial hotel with modern amenities. The breakfast was excellent and the staff went above and beyond to make our anniversary special. Will definitely return!"
+          text={currentLang === 'en' ? 'Beautiful colonial hotel with modern amenities. The breakfast was excellent and the staff went above and beyond to make our anniversary special. Will definitely return!' : 'Beautiful colonial hotel with modern amenities. The breakfast was excellent and the staff went above and beyond to make our anniversary special. Will definitely return!'}
         />
         
         <TestimonialCard 
-          name="Carlos Rodríguez"
-          date="Noviembre 2023"
+          name={currentLang === 'en' ? 'Carlos Rodríguez' : 'Carlos Rodríguez'}
+          date={currentLang === 'en' ? 'November 2023' : 'Noviembre 2023'}
           rating={5}
-          text="Excelente relación calidad-precio. La habitación era espaciosa, limpia y con una decoración hermosa que captura la esencia colonial de Cuenca. ¡Volveremos!"
+          text={currentLang === 'en' ? 'Excellent value for money. The room was spacious, clean and beautifully decorated that captures the colonial essence of Cuenca. We will definitely return!' : 'Excelente relación calidad-precio. La habitación era espaciosa, limpia y con una decoración hermosa que captura la esencia colonial de Cuenca. ¡Volveremos!'}
         />
       </div>
     </div>
   </section>
 
+  <!-- Gallery Preview Section -->
   <section class="py-20 bg-primary">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
@@ -394,6 +457,7 @@ const contactoLink = '/contacto';
     </div>
   </section>
 
+  <!-- CTA Section -->
   <section class="py-20 bg-accent">
     <div class="max-w-4xl mx-auto px-4 text-center">
       <h2 class="font-display text-3xl md:text-5xl font-bold text-white mb-6">

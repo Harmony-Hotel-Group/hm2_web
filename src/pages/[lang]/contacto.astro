@@ -1,58 +1,68 @@
 ---
 import Layout from '@layouts/Layout.astro';
 
-const currentLang = 'es';
-const isEn = false;
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } }
+  ];
+}
 
-const title = 'Contacto';
-const subtitle = 'Estamos aquí para ayudarte';
-const phoneTitle = 'Teléfono';
+const { lang } = Astro.params;
+const currentLang = lang || 'es';
+const isEn = currentLang === 'en';
+
+const title = isEn ? 'Contact' : 'Contacto';
+const subtitle = isEn ? 'We are here to help you' : 'Estamos aquí para ayudarte';
+const phoneTitle = isEn ? 'Phone' : 'Teléfono';
 const phone = '+593 980098757';
-const phoneDesc = '24 horas';
+const phoneDesc = isEn ? '24 hours' : '24 horas';
 const whatsappTitle = 'WhatsApp';
-const whatsappBtn = 'Enviar mensaje';
-const whatsappDesc = 'Respuesta inmediata';
+const whatsappBtn = isEn ? 'Send message' : 'Enviar mensaje';
+const whatsappDesc = isEn ? 'Immediate response' : 'Respuesta inmediata';
 const emailTitle = 'Email';
-const email = 'reservas@hotelmajestic2.com';
-const emailDesc = 'Respondemos en 24h';
-const formTitle = 'Envíanos un mensaje';
-const nameLabel = 'Nombre completo *';
-const namePlaceholder = 'Tu nombre';
-const emailLabel = 'Email *';
-const emailPlaceholder = 'tu@email.com';
-const phoneLabel = 'Teléfono';
-const phonePlaceholder = '+593 9xxxxxxxx';
-const subjectLabel = 'Asunto *';
-const subjectSelect = 'Selecciona un asunto';
-const subjectReserve = 'Reserva de habitación';
-const subjectConsult = 'Consulta general';
-const subjectEvents = 'Eventos grupales';
-const subjectFeedback = 'Comentarios';
-const subjectOther = 'Otro';
-const messageLabel = 'Mensaje *';
-const messagePlaceholder = '¿En qué podemos ayudarte?';
-const submitBtn = 'Enviar mensaje';
-const locationTitle = 'Nuestra ubicación';
+const email = isEn ? 'reservations@hotelmajestic2.com' : 'reservas@hotelmajestic2.com';
+const emailDesc = isEn ? 'We respond within 24h' : 'Respondemos en 24h';
+const formTitle = isEn ? 'Send us a message' : 'Envíanos un mensaje';
+const nameLabel = isEn ? 'Full name *' : 'Nombre completo *';
+const namePlaceholder = isEn ? 'Your name' : 'Tu nombre';
+const emailLabel = isEn ? 'Email *' : 'Email *';
+const emailPlaceholder = isEn ? 'your@email.com' : 'tu@email.com';
+const phoneLabel = isEn ? 'Phone' : 'Teléfono';
+const phonePlaceholder = isEn ? '+593 9xxxxxxxx' : '+593 9xxxxxxxx';
+const subjectLabel = isEn ? 'Subject *' : 'Asunto *';
+const subjectSelect = isEn ? 'Select a subject' : 'Selecciona un asunto';
+const subjectReserve = isEn ? 'Room reservation' : 'Reserva de habitación';
+const subjectConsult = isEn ? 'General inquiry' : 'Consulta general';
+const subjectEvents = isEn ? 'Group events' : 'Eventos grupales';
+const subjectFeedback = isEn ? 'Feedback' : 'Comentarios';
+const subjectOther = isEn ? 'Other' : 'Otro';
+const messageLabel = isEn ? 'Message *' : 'Mensaje *';
+const messagePlaceholder = isEn ? 'How can we help you?' : '¿En qué podemos ayudarte?';
+const submitBtn = isEn ? 'Send message' : 'Enviar mensaje';
+const locationTitle = isEn ? 'Our location' : 'Nuestra ubicación';
 const hotelName = 'Hotel Majestic II';
-const address = 'Calle Gran Colombia 2-07<br/>y Manuel Vega<br/>Cuenca, Ecuador';
-const howToGet = 'Cómo llegar';
-const fromAirport = 'Desde el airport:';
-const fromTerminal = 'Desde la terminal terrestre:';
-const fromCenter = 'Desde el centro:';
-const airportTime = '15 min en taxi ($5-8)';
-const terminalTime = '10 min en taxi ($3-5)';
-const centerTime = 'A pie (5 min)';
-const hoursTitle = 'Horarios de atención';
-const receptionTitle = 'Recepción';
-const receptionHours = '24 horas';
-const receptionDays = 'Todos los días';
-const reservationsTitle = 'Reservas';
-const reservationsHours = '7:00 - 22:00';
-const restaurantTitle = 'Restaurant';
-const restaurantHours = '7:00 - 22:00';
+const address = isEn 
+  ? 'Gran Colombia Street 2-07<br/>and Manuel Vega<br/>Cuenca, Ecuador'
+  : 'Calle Gran Colombia 2-07<br/>y Manuel Vega<br/>Cuenca, Ecuador';
+const howToGet = isEn ? 'How to get here' : 'Cómo llegar';
+const fromAirport = isEn ? 'From the airport:' : 'Desde el aeropuerto:';
+const fromTerminal = isEn ? 'From the bus terminal:' : 'Desde la terminal terrestre:';
+const fromCenter = isEn ? 'From the center:' : 'Desde el centro:';
+const airportTime = isEn ? '15 min by taxi ($5-8)' : '15 min en taxi ($5-8)';
+const terminalTime = isEn ? '10 min by taxi ($3-5)' : '10 min en taxi ($3-5)';
+const centerTime = isEn ? 'On foot (5 min)' : 'A pie (5 min)';
+const hoursTitle = isEn ? 'Business hours' : 'Horarios de atención';
+const receptionTitle = isEn ? 'Reception' : 'Recepción';
+const receptionHours = isEn ? '24 hours' : '24 horas';
+const receptionDays = isEn ? 'Every day' : 'Todos los días';
+const reservationsTitle = isEn ? 'Reservations' : 'Reservas';
+const reservationsHours = isEn ? '7:00 - 22:00' : '7:00 - 22:00';
+const restaurantTitle = isEn ? 'Restaurant' : 'Restaurant';
+const restaurantHours = isEn ? '7:00 - 22:00' : '7:00 - 22:00';
 ---
 
 <Layout lang={currentLang} title={title}>
+  <!-- Hero -->
   <section class="relative h-64 md:h-80 flex items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
       <img 
@@ -68,9 +78,11 @@ const restaurantHours = '7:00 - 22:00';
     </div>
   </section>
 
+  <!-- Contact Info Cards -->
   <section class="py-16 bg-background">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Phone -->
         <div class="bg-white rounded-xl p-8 shadow-md text-center hover:shadow-lg transition-shadow">
           <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -84,6 +96,7 @@ const restaurantHours = '7:00 - 22:00';
           <span class="text-sm text-text-muted block mt-1">{phoneDesc}</span>
         </div>
 
+        <!-- WhatsApp -->
         <div class="bg-white rounded-xl p-8 shadow-md text-center hover:shadow-lg transition-shadow">
           <div class="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" viewBox="0 0 24 24" fill="currentColor">
@@ -97,6 +110,7 @@ const restaurantHours = '7:00 - 22:00';
           <span class="text-sm text-text-muted block mt-1">{whatsappDesc}</span>
         </div>
 
+        <!-- Email -->
         <div class="bg-white rounded-xl p-8 shadow-md text-center hover:shadow-lg transition-shadow">
           <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -113,9 +127,11 @@ const restaurantHours = '7:00 - 22:00';
     </div>
   </section>
 
+  <!-- Contact Form & Map -->
   <section class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <!-- Form -->
         <div>
           <h2 class="font-display text-2xl font-bold text-primary mb-6">{formTitle}</h2>
           <form id="contact-form" class="space-y-6">
@@ -161,6 +177,7 @@ const restaurantHours = '7:00 - 22:00';
           </form>
         </div>
 
+        <!-- Map & Address -->
         <div>
           <h2 class="font-display text-2xl font-bold text-primary mb-6">{locationTitle}</h2>
           
@@ -207,6 +224,7 @@ const restaurantHours = '7:00 - 22:00';
     </div>
   </section>
 
+  <!-- Business Hours -->
   <section class="py-16 bg-background-warm">
     <div class="max-w-4xl mx-auto px-4">
       <h2 class="section-title text-center mb-8">{hoursTitle}</h2>

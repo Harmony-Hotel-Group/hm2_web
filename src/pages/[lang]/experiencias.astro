@@ -2,71 +2,95 @@
 import Layout from '@layouts/Layout.astro';
 import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
 
-const currentLang = 'es';
-const isEn = false;
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en' } }
+  ];
+}
+
+const { lang } = Astro.params;
+const currentLang = lang || 'es';
+const isEn = currentLang === 'en';
 
 const experiences = [
   {
     id: 'catedral',
-    title: 'Catedral de la Inmaculada Concepción',
-    description: 'El símbolo más icónico de Cuenca. Sus domos azules de hojalata brillan bajo el sol andino. La catedral neoclásica fue construida entre 1885 y 1975 y es una obra maestra de la arquitectura colonial.',
-    distance: '5 min caminando',
+    title: isEn ? 'Cathedral of the Immaculate Conception' : 'Catedral de la Inmaculada Concepción',
+    description: isEn 
+      ? "Cuenca's most iconic symbol. Its blue tin domes shine under the Andean sun. The neoclassical cathedral was built between 1885 and 1975 and is a masterpiece of colonial architecture."
+      : 'El símbolo más icónico de Cuenca. Sus domos azules de hojalata brillan bajo el sol andino. La catedral neoclásica fue construida entre 1885 y 1975 y es una obra maestra de la arquitectura colonial.',
+    distance: isEn ? '5 min walking' : '5 min caminando',
     category: 'cultural'
   },
   {
     id: 'parque',
-    title: 'Parque Calderón de Barca',
-    description: 'El corazón palpitante de la ciudad. Aquí encontrarás artistas locales, música en vivo los fines de semana, y la oportunidad de sumergirte en la vida cotidiana de los cucapeños.',
-    distance: '3 min caminando',
+    title: isEn ? 'Parque Calderón de Barca' : 'Parque Calderón de Barca',
+    description: isEn 
+      ? 'The beating heart of the city. Here you will find local artists, live music on weekends, and the opportunity to immerse yourself in the daily life of Cuencanos.'
+      : 'El corazón palpitante de la ciudad. Aquí encontrarás artistas locales, música en vivo los fines de semana, y la oportunidad de sumergirte en la vida cotidiana de los cucapeños.',
+    distance: isEn ? '3 min walking' : '3 min caminando',
     category: 'cultural'
   },
   {
     id: 'pumapungo',
-    title: 'Museo y Parque Arqueológico Pumapungo',
-    description: 'Explora las ruinas del antiguo imperio Cañari. Este importante sitio arqueológico ofrece una ventana a las civilizaciones que habitó esta región antes de los incas.',
-    distance: '15 min caminando',
+    title: isEn ? 'Pumapungo Museum and Archaeological Park' : 'Museo y Parque Arqueológico Pumapungo',
+    description: isEn 
+      ? "Explore the ruins of the ancient Cañari empire. This important archaeological site offers a window into the civilizations that inhabited this region before the Incas."
+      : 'Explora las ruinas del antiguo imperio Cañari. Este importante sitio arqueológico ofrece una ventana a las civilizaciones que habitó esta región antes de los incas.',
+    distance: isEn ? '15 min walking' : '15 min caminando',
     category: 'history'
   },
   {
     id: 'mirador',
-    title: 'Mirador de Cullupamba',
-    description: 'Las mejores vistas panorámicas de Cuenca. Un lugar perfecto para fotografía y disfrutar del atardecer sobre la ciudad colonial.',
-    distance: '20 min en taxi',
+    title: isEn ? 'Cullupamba Viewpoint' : 'Mirador de Cullupamba',
+    description: isEn 
+      ? 'The best panoramic views of Cuenca. A perfect place for photography and enjoying the sunset over the colonial city.'
+      : 'Las mejores vistas panorámicas de Cuenca. Un lugar perfecto para fotografía y disfrutar del atardecer sobre la ciudad colonial.',
+    distance: isEn ? '20 min by taxi' : '20 min en taxi',
     category: 'nature'
   },
   {
     id: 'cajas',
-    title: 'Parque Nacional Cajas',
-    description: 'A solo 30 minutos del centro, este parque nacional ofrece lagunas cristalinas, trekking de alta montaña y paisajes andinos incredibly.',
+    title: isEn ? 'Cajas National Park' : 'Parque Nacional Cajas',
+    description: isEn 
+      ? 'Just 30 minutes from the center, this national park offers crystal-clear lakes, high-mountain trekking, and incredible Andean landscapes.'
+      : 'A solo 30 minutos del centro, este parque nacional ofrece lagunas cristalinas, trekking de alta montaña y paisajes andinos increíbles.',
     distance: '45 min',
     category: 'nature'
   },
   {
     id: 'gualaceo',
-    title: 'Gualaceo - Pueblo Artesanal',
-    description: 'Famoso por su tejido en tagua (marfil vegetal) y productos artesanales. Un viaje de día perfecto para conocer la artesanía local.',
-    distance: '1 hora',
+    title: isEn ? 'Gualaceo - Artisan Village' : 'Gualaceo - Pueblo Artesanal',
+    description: isEn 
+      ? 'Famous for its tagua (vegetable ivory) weaving and artisanal products. A perfect day trip to discover local craftsmanship.'
+      : 'Famoso por su tejido en tagua (marfil vegetal) y productos artesanales. Un viaje de día perfecto para conocer la artesanía local.',
+    distance: isEn ? '1 hour' : '1 hora',
     category: 'cultural'
   }
 ];
 
 const categories = [
-  { id: 'all', label: 'Todos' },
-  { id: 'cultural', label: 'Cultural' },
-  { id: 'history', label: 'Historia' },
-  { id: 'nature', label: 'Naturaleza' }
+  { id: 'all', label: isEn ? 'All' : 'Todos' },
+  { id: 'cultural', label: isEn ? 'Cultural' : 'Cultural' },
+  { id: 'history', label: isEn ? 'History' : 'Historia' },
+  { id: 'nature', label: isEn ? 'Nature' : 'Naturaleza' }
 ];
 
-const title = 'Experiencias';
-const subtitle = 'Descubre lo mejor de Cuenca y sus alrededores';
-const titleMap = 'En el Corazón de Cuenca';
-const mapDesc = 'Nuestro hotel está estratégicamente ubicado para que puedas explorar las principales atracciones a pie.';
-const helpTitle = '¿Necesitas ayuda para planificar?';
-const helpDesc = 'Podemos ayudarte a organizar tours guiados y transporte.';
-const toursBtn = 'Consultar Tours';
+const title = isEn ? 'Experiences' : 'Experiencias';
+const subtitle = isEn ? 'Discover the best of Cuenca and its surroundings' : 'Descubre lo mejor de Cuenca y sus alrededores';
+const titleMap = isEn ? 'In the Heart of Cuenca' : 'En el Corazón de Cuenca';
+const mapDesc = isEn 
+  ? 'Our hotel is strategically located so you can explore the main attractions on foot.'
+  : 'Nuestro hotel está estratégicamente ubicado para que puedas explorar las principales atracciones a pie.';
+const helpTitle = isEn ? 'Need help planning?' : '¿Necesitas ayuda para planificar?';
+const helpDesc = isEn 
+  ? 'We can help you organize guided tours and transportation.'
+  : 'Podemos ayudarte a organizar tours guiados y transporte.';
+const toursBtn = isEn ? 'Ask about Tours' : 'Consultar Tours';
 ---
 
 <Layout lang={currentLang} title={title}>
+  <!-- Hero -->
   <section class="relative h-64 md:h-80 flex items-center justify-center overflow-hidden">
     <div class="absolute inset-0 z-0">
       <img 
@@ -82,6 +106,7 @@ const toursBtn = 'Consultar Tours';
     </div>
   </section>
 
+  <!-- Filter -->
   <div class="bg-white border-b border-gray-100 sticky top-20 z-30">
     <div class="max-w-7xl mx-auto px-4 py-4">
       <div class="flex items-center justify-center space-x-4">
@@ -97,6 +122,7 @@ const toursBtn = 'Consultar Tours';
     </div>
   </div>
 
+  <!-- Experiences Grid -->
   <section class="py-16 bg-background">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -126,6 +152,7 @@ const toursBtn = 'Consultar Tours';
     </div>
   </section>
 
+  <!-- Map Section -->
   <section class="py-16 bg-white">
     <div class="max-w-4xl mx-auto px-4 text-center">
       <h2 class="section-title mb-4">{titleMap}</h2>
@@ -146,10 +173,11 @@ const toursBtn = 'Consultar Tours';
     </div>
   </section>
 
+  <!-- Tours CTA -->
   <section class="py-16 bg-accent">
     <div class="max-w-4xl mx-auto px-4 text-center">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10a10 10 0 0114 0M3 10a10 10 0 0114 0M3 10a10 10 0 0114 0M3 10a10 0 0114 0" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10a10 10 0 0114 0M3 10a10 10 0 0114 0M3 10a10 10 0 0114 0M3 10a10 10 0 0114 0" />
       </svg>
       <h2 class="font-display text-2xl font-bold text-white mb-2">{helpTitle}</h2>
       <p class="text-white/90 mb-6">

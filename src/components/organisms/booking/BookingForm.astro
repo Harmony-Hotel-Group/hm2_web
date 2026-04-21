@@ -45,9 +45,9 @@ const fieldControlClass =
   'w-full h-[42px] px-3 py-2.5 text-sm text-black border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all bg-white';
 ---
 
-<form 
-  id="booking-form" 
-  method="POST" 
+<form
+  id="booking-form"
+  method="POST"
   action="/api/booking"
   class:list={[
     'booking-form',
@@ -79,8 +79,8 @@ const fieldControlClass =
       <!-- Adults -->
       <div class="form-group">
         <label class="text-xs font-medium text-black mb-1" for="adults">Adultos</label>
-        <select 
-          id="adults" 
+        <select
+          id="adults"
           name="adults"
           class={fieldControlClass}
         >
@@ -94,8 +94,8 @@ const fieldControlClass =
       <!-- Children -->
       <div class="form-group">
         <label class="text-xs font-medium text-black mb-1" for="children">Niños</label>
-        <select 
-          id="children" 
+        <select
+          id="children"
           name="children"
           class={fieldControlClass}
         >
@@ -109,8 +109,8 @@ const fieldControlClass =
       <!-- Rooms -->
       <div class="form-group">
         <label class="text-xs font-medium text-black mb-1" for="rooms">Habitaciones</label>
-        <select 
-          id="rooms" 
+        <select
+          id="rooms"
           name="rooms"
           class={fieldControlClass}
         >
@@ -154,9 +154,9 @@ const fieldControlClass =
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
       <div class="form-group">
         <label class="text-xs font-medium text-black mb-1" for="group-adults">Adultos (+18 años)</label>
-        <input 
-          type="number" 
-          id="group-adults" 
+        <input
+          type="number"
+          id="group-adults"
           name="groupAdults"
           min="8"
           max="50"
@@ -167,9 +167,9 @@ const fieldControlClass =
       </div>
       <div class="form-group">
         <label class="text-xs font-medium text-black mb-1" for="group-teens">Adolescentes (&lt;18 años)</label>
-        <input 
-          type="number" 
-          id="group-teens" 
+        <input
+          type="number"
+          id="group-teens"
           name="groupTeens"
           min="0"
           max="20"
@@ -180,9 +180,9 @@ const fieldControlClass =
       </div>
       <div class="form-group">
         <label class="text-xs font-medium text-black mb-1" for="group-kids">Niños (&lt;12 años)</label>
-        <input 
-          type="number" 
-          id="group-kids" 
+        <input
+          type="number"
+          id="group-kids"
           name="groupKids"
           min="0"
           max="15"
@@ -193,9 +193,9 @@ const fieldControlClass =
       </div>
       <div class="form-group">
         <label class="text-xs font-medium text-black mb-1" for="group-infants">Bebés (&lt;5 años)</label>
-        <input 
-          type="number" 
-          id="group-infants" 
+        <input
+          type="number"
+          id="group-infants"
           name="groupInfants"
           min="0"
           max="10"
@@ -207,8 +207,8 @@ const fieldControlClass =
     </div>
     <div class="form-group mt-3">
       <label class="text-xs font-medium text-black mb-1" for="distribution-type">Tipo de distribución</label>
-      <select 
-        id="distribution-type" 
+      <select
+        id="distribution-type"
         name="distributionType"
         class={fieldControlClass}
       >
@@ -493,7 +493,7 @@ const fieldControlClass =
   });
 
   form?.addEventListener('date-range:change', (e) => {
-    // console.log('📡 BookingForm caught date-range:change:', e.detail);
+    console.log('📡 BookingForm caught date-range:change:', e.detail);
     syncExtrasVisibility();
   });
   console.log('🔗 BookingForm listeners attached');
@@ -502,31 +502,31 @@ const fieldControlClass =
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const formData = new FormData(form);
     const mode = formModeInput.value;
-    
+
     // Obtener checkin/checkout según modo
     const groupCheckin = formData.get('group_checkin') as string | null;
     const groupCheckout = formData.get('group_checkout') as string | null;
-    const checkin = mode === 'group' 
+    const checkin = mode === 'group'
       ? (groupCheckin || (formData.get('checkin') as string | null))
       : (formData.get('checkin') as string | null);
     const checkout = mode === 'group'
       ? (groupCheckout || (formData.get('checkout') as string | null))
       : (formData.get('checkout') as string | null);
-    
+
     // Validar fechas (obligatorio en ambos modos)
     if (!checkin || !checkout) {
       alert('Selecciona una fecha de ingreso y salida.');
       return;
     }
-    
+
     // Detectar opciones extras antes de validaciones específicas
     const parkingEnabled = formData.get('parking') === 'on';
     const specialRequestEnabled = formData.get('special_request_enabled') === 'on';
     let specialRequestText = '';
-    
+
     if (specialRequestEnabled) {
       specialRequestText = String(formData.get('special_requests') || '').trim();
       if (specialRequestText.length < 25) {
@@ -534,13 +534,13 @@ const fieldControlClass =
         return;
       }
     }
-    
+
     // Validaciones específicas por modo
     if (mode === 'standard') {
       // Adultos y habitaciones obligatorios
       const adults = formData.get('adults');
       const rooms = formData.get('rooms');
-      
+
       if (!adults || adults === '') {
         alert('Selecciona el número de adultos.');
         return;
@@ -549,7 +549,7 @@ const fieldControlClass =
         alert('Selecciona el número de habitaciones.');
         return;
       }
-      
+
       // Validar edades de niños (si hay niños)
       const childrenCount = parseInt((formData.get('children') as string) || '0', 10) || 0;
       const childAges: number[] = [];
@@ -575,7 +575,7 @@ const fieldControlClass =
         return;
       }
     }
-    
+
     // Validar vehículo si parking activado
     if (parkingEnabled) {
       const vehicleItems = document.querySelectorAll('.vehicle-item');
@@ -592,7 +592,7 @@ const fieldControlClass =
         return;
       }
     }
-    
+
     // Construir objeto data para el mensaje
     const data: Record<string, any> = {
       mode,
@@ -602,7 +602,7 @@ const fieldControlClass =
       parking: parkingEnabled ? 'Sí' : 'No',
       special_request: specialRequestEnabled ? (specialRequestText || 'Sin detalle') : 'Ninguna'
     };
-    
+
     // Procesar vehículos
     const vehicleMap = new Map<number, { type?: string; plate?: string }>();
     for (const [key, value] of formData.entries()) {
@@ -618,7 +618,7 @@ const fieldControlClass =
       }
     }
     data.vehicles = Array.from(vehicleMap.values()).filter((v) => (v.type && v.type.trim()) || (v.plate && v.plate.trim()));
-    
+
     // Procesar datos específicos del modo
     if (mode === 'standard') {
       data.adults = formData.get('adults');
@@ -652,15 +652,15 @@ const fieldControlClass =
       data.distributionType = formData.get('distributionType');
       data.groupNotes = formData.get('special_requests') || '';
     }
-    
+
     // Calcular noches
     const checkIn = new Date(data.checkin as string);
     const checkOut = new Date(data.checkout as string);
     const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
-    
+
     // Construir mensaje WhatsApp
     let message = `*¡Hola! Me interesa reservar en Hotel Majestic II.*%0A%0A📅 *Check-in:* ${data.checkin}%0A📅 *Check-out:* ${data.checkout}%0A Alojamiento: (${nights} noche${nights > 1 ? 's' : ''})%0A`;
-    
+
     if (mode === 'standard') {
       const adultsForMessage = data.totalBillableAdults ?? data.adults;
       const childrenForMessage = data.minorChildrenCount ?? data.children;
@@ -677,9 +677,9 @@ const fieldControlClass =
     } else {
       message += `👥 *Grupo:* ${data.groupAdults} adultos, ${data.groupTeens} adolescentes, ${data.groupKids} niños, ${data.groupInfants} bebés%0A🏠 *Distribución:* ${data.distributionType}%0A`;
     }
-    
+
     message += `%0A🏷️ *Extras:*%0A   Desayuno: ${data.breakfast}%0A   Parking: ${data.parking}%0A`;
-    
+
     if (data.parking === 'Sí' && data.vehicles.length > 0) {
       message += `%0A🚗 *Vehículos:*`;
       data.vehicles.forEach((vehicle: { type?: string; plate?: string }, index: number) => {
@@ -688,9 +688,9 @@ const fieldControlClass =
         message += `%0A   ${index + 1}. ${type} - ${plate}`;
       });
     }
-    
+
     message += `%0A%0A📝 *Notas:* ${data.special_request}%0A%0APor favor confirmar disponibilidad y tarifa.`;
-    
+
     window.open(`https://wa.me/593980098757?text=${message}`, '_blank');
   });
 </script>

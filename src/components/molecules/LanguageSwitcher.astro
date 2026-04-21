@@ -1,0 +1,93 @@
+---
+const currentPath = Astro.url.pathname;
+
+// Detect current language based on prefix
+const isEnglish = currentPath.startsWith('/en');
+const isSpanish = currentPath.startsWith('/es') || (!currentPath.startsWith('/en') && !currentPath.startsWith('/es'));
+
+function getUrlForLang(lang: string): string {
+  const path = currentPath;
+  
+  // Remove any existing language prefix
+  const pathWithoutLang = path.replace(/^\/(es|en)/, '') || '/';
+  
+  if (lang === 'es') {
+    // Spanish: no prefix (except for root)
+    return pathWithoutLang === '/' ? '/' : pathWithoutLang;
+  }
+  
+  if (lang === 'en') {
+    // English: add /en prefix
+    return `/en${pathWithoutLang === '/' ? '' : pathWithoutLang}`;
+  }
+  
+  return path;
+}
+
+const esUrl = getUrlForLang('es');
+const enUrl = getUrlForLang('en');
+---
+
+<div class="relative inline-flex items-center" id="lang-switcher">
+  <button 
+    class="flex items-center space-x-2 px-3 py-1 text-sm font-medium text-white hover:text-accent transition-colors"
+    id="lang-switcher-btn"
+    type="button"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+  >
+    <span class="uppercase">{isEnglish ? 'EN' : 'ES'}</span>
+    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+  
+  <div 
+    id="lang-switcher-menu"
+    class="hidden absolute right-0 mt-2 w-32 origin-top-right rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-50"
+    role="menu"
+  >
+    <a
+      href={esUrl}
+      class:list={[
+        "block px-4 py-2 text-sm hover:bg-gray-100 transition-colors",
+        !isEnglish ? "font-medium text-primary" : "text-gray-700"
+      ]}
+      role="menuitem"
+    >
+      Español
+    </a>
+    <a
+      href={enUrl}
+      class:list={[
+        "block px-4 py-2 text-sm hover:bg-gray-100 transition-colors",
+        isEnglish ? "font-medium text-primary" : "text-gray-700"
+      ]}
+      role="menuitem"
+    >
+      English
+    </a>
+  </div>
+</div>
+
+<script>
+  const button = document.getElementById('lang-switcher-btn');
+  const menu = document.getElementById('lang-switcher-menu');
+  const container = document.getElementById('lang-switcher');
+  
+  if (button && menu && container) {
+    button.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', String(!isExpanded));
+      menu.classList.toggle('hidden', isExpanded);
+    });
+    
+    document.addEventListener('click', (e) => {
+      if (!container.contains(e.target as Node)) {
+        button.setAttribute('aria-expanded', 'false');
+        menu.classList.add('hidden');
+      }
+    });
+  }
+</script>

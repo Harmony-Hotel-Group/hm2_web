@@ -92,15 +92,40 @@ const {
       ? window.flatpickr.l10ns.es
       : undefined;
 
+    // ── Editing-guard state ─────────────────────────────────────────────────
+    // Tracks whether the user is mid-selection so we don't hide extras while
+    // they are picking the second date of a new range.
+    var _editing = false;          // true while the calendar is open
+    var _rangeConfirmed = false;   // true once a full range is chosen in this session
+    var _previousCheckin = '';
+    var _previousCheckout = '';
+    var _previousLabel = '';
+
     window.flatpickr(input, {
       mode: 'range',
       minDate: 'today',
       dateFormat: 'Y-m-d',
       locale: localeObj,
       allowInput: false,
+      onOpen: function() {
+        // Snapshot the current valid range before the user starts editing
+        _editing = true;
+        _rangeConfirmed = false;
+        _previousCheckin  = checkinHidden.value;
+        _previousCheckout = checkoutHidden.value;
+        _previousLabel    = input.value;
+      },
       onChange: function(selectedDates) {
         if (selectedDates.length < 2) {
-          checkinHidden.value = '';
+          // User clicked the first date of a new range.
+          // If we already had a confirmed range, keep the hidden inputs intact
+          // so the extras row stays visible while they pick the second date.
+          if (_editing && (_previousCheckin && _previousCheckout)) {
+            // Preserve previous values — do NOT call emitRangeChange yet
+            return;
+          }
+          // No previous range: truly empty state
+          checkinHidden.value  = '';
           checkoutHidden.value = '';
           if (!isRequired) input.value = '';
           emitRangeChange();
@@ -108,17 +133,22 @@ const {
         }
 
         var start = selectedDates[0];
-        var end = selectedDates[1];
+        var end   = selectedDates[1];
 
         if (start.toDateString() === end.toDateString()) {
-          // Same day selection — clear and warn
-          checkinHidden.value = '';
-          checkoutHidden.value = '';
-          input.value = '';
-          // Use a tiny delay so flatpickr finishes its own state update before we clear
+          // Same-day selection — restore previous range and warn
+          checkinHidden.value  = _previousCheckin;
+          checkoutHidden.value = _previousCheckout;
+          input.value          = _previousLabel;
           setTimeout(function() {
             if (window._currentFlatpickrInstance) {
               window._currentFlatpickrInstance.clear();
+              if (_previousCheckin && _previousCheckout) {
+                window._currentFlatpickrInstance.setDate(
+                  [new Date(_previousCheckin), new Date(_previousCheckout)],
+                  false
+                );
+              }
             }
           }, 0);
           alert('Debes seleccionar al menos 2 días diferentes.');
@@ -126,10 +156,39 @@ const {
           return;
         }
 
-        checkinHidden.value = _drpFormatDateISO(start);
+        // Full valid range selected
+        checkinHidden.value  = _drpFormatDateISO(start);
         checkoutHidden.value = _drpFormatDateISO(end);
-        input.value = _drpFormatRangeLabel(start, end, inputLang);
+        input.value          = _drpFormatRangeLabel(start, end, inputLang);
+        _rangeConfirmed      = true;
         emitRangeChange();
+      },
+      onClose: function(selectedDates) {
+        // If the user closed the picker without completing a new range,
+        // restore the previous range (or clear if there was none).
+        if (_editing && !_rangeConfirmed) {
+          if (_previousCheckin && _previousCheckout) {
+            // Restore the old range silently
+            checkinHidden.value  = _previousCheckin;
+            checkoutHidden.value = _previousCheckout;
+            input.value          = _previousLabel;
+            // Re-sync the picker UI without firing onChange
+            if (window._currentFlatpickrInstance) {
+              window._currentFlatpickrInstance.setDate(
+                [new Date(_previousCheckin), new Date(_previousCheckout)],
+                false
+              );
+            }
+          } else {
+            // Was empty before — truly clear
+            checkinHidden.value  = '';
+            checkoutHidden.value = '';
+            input.value          = '';
+          }
+          emitRangeChange();
+        }
+        _editing       = false;
+        _rangeConfirmed = false;
       },
       onReady: function(_selectedDates, _dateStr, instance) {
         // Store reference for same-day clear workaround
@@ -138,7 +197,7 @@ const {
         // Restore pre-existing hidden values (e.g. sync between standard ↔ group modes)
         if (checkinHidden.value && checkoutHidden.value) {
           var start = new Date(checkinHidden.value);
-          var end = new Date(checkoutHidden.value);
+          var end   = new Date(checkoutHidden.value);
           if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
             instance.setDate([start, end], true);
           }

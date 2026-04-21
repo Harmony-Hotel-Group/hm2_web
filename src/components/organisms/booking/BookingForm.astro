@@ -5,11 +5,12 @@ import SwitchField from '@molecules/forms/SwitchField.astro';
 import { range } from "@utils/math";
 
 interface Props {
-  lang?: string;
   variant?: 'hero' | 'page';
 }
 
-const { lang = 'es', variant = 'hero' } = Astro.props;
+const { variant = 'hero' } = Astro.props;
+const currentPath = Astro.url.pathname;
+const lang = currentPath.startsWith('/en') ? 'en' : 'es';
 
 const adultsOptions = range(1, 8).map((i, index, array) => {
 	if (index === array.length - 1) {
@@ -64,15 +65,15 @@ const fieldControlClass =
       variant === 'hero' ? 'grid-cols-2 md:grid-cols-5' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-5'
     ]}>
       <div class="md:col-span-2">
-        <DateRangePickerField
-          id="booking-date-range"
-          label="Ingreso y salida"
-          placeholder="Selecciona ingreso y salida"
-          checkinName="checkin"
-          checkoutName="checkout"
-          lang={lang === 'es' ? 'es' : 'en'}
-          required={true}
-        />
+       <DateRangePickerField
+         id="booking-date-range"
+         label="Ingreso y salida"
+         placeholder="Selecciona ingreso y salida"
+         checkinName="checkin"
+         checkoutName="checkout"
+         lang={lang}
+         required={true}
+       />
       </div>
 
       <!-- Adults -->
@@ -140,15 +141,15 @@ const fieldControlClass =
       </button>
     </div>
     <div class="mb-3">
-      <DateRangePickerField
-        id="booking-date-range-group"
-        label="Ingreso y salida (grupo)"
-        placeholder="Selecciona ingreso y salida"
-        checkinName="group_checkin"
-        checkoutName="group_checkout"
-        lang={lang === 'es' ? 'es' : 'en'}
-        required={false}
-      />
+       <DateRangePickerField
+         id="booking-date-range-group"
+         label="Ingreso y salida (grupo)"
+         placeholder="Selecciona ingreso y salida"
+         checkinName="group_checkin"
+         checkoutName="group_checkout"
+         lang={lang}
+         required={false}
+       />
     </div>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
       <div class="form-group">
@@ -491,7 +492,11 @@ const fieldControlClass =
     setGroupMode(false);
   });
 
-  form?.addEventListener('date-range:change', syncExtrasVisibility);
+  form?.addEventListener('date-range:change', (e) => {
+    // console.log('📡 BookingForm caught date-range:change:', e.detail);
+    syncExtrasVisibility();
+  });
+  console.log('🔗 BookingForm listeners attached');
   syncExtrasVisibility();
   renderChildrenAgeInputs();
 

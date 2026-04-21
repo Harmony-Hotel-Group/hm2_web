@@ -20,8 +20,6 @@ const {
 } = Astro.props;
 ---
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
-
 <div class="form-group">
   <label class="label text-black" for={id}>{label}</label>
   <div class="relative">
@@ -46,70 +44,61 @@ const {
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+<script is:inline>
+  // ─── Helpers ────────────────────────────────────────────────────────────────
 
-<script>
-  type FlatpickrFn = (
-    element: HTMLInputElement,
-    options: Record<string, unknown>
-  ) => { setDate: (dates: Date[], triggerChange?: boolean) => void };
-
-  declare global {
-    interface Window {
-      flatpickr?: FlatpickrFn;
-      initializeDateRangePickers?: () => void;
-    }
-  }
-
-  function formatDateISO(date: Date): string {
+  function _drpFormatDateISO(date) {
     return date.toLocaleDateString('en-CA');
   }
 
-  function formatRangeLabel(start: Date, end: Date): string {
-    const diffMs = end.getTime() - start.getTime();
-    const nights = Math.max(0, Math.round(diffMs / (1000 * 60 * 60 * 24)));
-    const nightLabel = `${nights} noche${nights === 1 ? '' : 's'}`;
-    return `${formatDateISO(start)} -> ${formatDateISO(end)} (${nightLabel})`;
+  function _drpFormatRangeLabel(start, end, lang) {
+    var diffMs = end.getTime() - start.getTime();
+    var nights = Math.max(0, Math.round(diffMs / (1000 * 60 * 60 * 24)));
+    var nightLabel = lang === 'en'
+      ? (nights === 1 ? '1 night' : nights + ' nights')
+      : (nights === 1 ? '1 noche' : nights + ' noches');
+    return _drpFormatDateISO(start) + ' -> ' + _drpFormatDateISO(end) + ' (' + nightLabel + ')';
   }
 
-  function initPicker(input: HTMLInputElement) {
+  // ─── Picker initializer ─────────────────────────────────────────────────────
+
+  function _drpInitPicker(input) {
     if (input.dataset.flatpickrInitialized === 'true') return;
     if (!window.flatpickr) return;
 
-    const pickerId = input.id;
-    const checkinHidden = document.querySelector(
-      `[data-checkin-hidden="${pickerId}"]`
-    ) as HTMLInputElement | null;
-    const checkoutHidden = document.querySelector(
-      `[data-checkout-hidden="${pickerId}"]`
-    ) as HTMLInputElement | null;
+    var pickerId = input.id;
+    var checkinHidden = document.querySelector('[data-checkin-hidden="' + pickerId + '"]');
+    var checkoutHidden = document.querySelector('[data-checkout-hidden="' + pickerId + '"]');
 
     if (!checkinHidden || !checkoutHidden) return;
 
-    const locale = input.dataset.lang === 'es' ? 'es' : 'default';
-    const isRequired = input.dataset.required === 'true';
-    const emitRangeChange = () => {
-      input.dispatchEvent(
-        new CustomEvent('date-range:change', {
-          bubbles: true,
-          detail: {
-            id: pickerId,
-            checkin: checkinHidden.value,
-            checkout: checkoutHidden.value,
-            hasRange: Boolean(checkinHidden.value && checkoutHidden.value),
-          },
-        })
-      );
-    };
+    var inputLang = input.dataset.lang === 'en' ? 'en' : 'es';
+    var isRequired = input.dataset.required === 'true';
 
-    const picker = window.flatpickr(input, {
+    function emitRangeChange() {
+      input.dispatchEvent(new CustomEvent('date-range:change', {
+        bubbles: true,
+        detail: {
+          id: pickerId,
+          checkin: checkinHidden.value,
+          checkout: checkoutHidden.value,
+          hasRange: Boolean(checkinHidden.value && checkoutHidden.value),
+        },
+      }));
+    }
+
+    // Resolve locale object: flatpickr l10n for 'es', default for 'en'
+    var localeObj = (inputLang === 'es' && window.flatpickr.l10ns && window.flatpickr.l10ns.es)
+      ? window.flatpickr.l10ns.es
+      : undefined;
+
+    window.flatpickr(input, {
       mode: 'range',
       minDate: 'today',
       dateFormat: 'Y-m-d',
-      locale,
+      locale: localeObj,
       allowInput: false,
-      onChange: (selectedDates: Date[], _dateStr: string, instance: { clear: () => void }) => {
+      onChange: function(selectedDates) {
         if (selectedDates.length < 2) {
           checkinHidden.value = '';
           checkoutHidden.value = '';
@@ -118,54 +107,130 @@ const {
           return;
         }
 
-        const [start, end] = selectedDates;
+        var start = selectedDates[0];
+        var end = selectedDates[1];
+
         if (start.toDateString() === end.toDateString()) {
-          instance.clear();
+          // Same day selection — clear and warn
           checkinHidden.value = '';
           checkoutHidden.value = '';
           input.value = '';
+          // Use a tiny delay so flatpickr finishes its own state update before we clear
+          setTimeout(function() {
+            if (window._currentFlatpickrInstance) {
+              window._currentFlatpickrInstance.clear();
+            }
+          }, 0);
           alert('Debes seleccionar al menos 2 días diferentes.');
           emitRangeChange();
           return;
         }
 
-        checkinHidden.value = formatDateISO(start);
-        checkoutHidden.value = formatDateISO(end);
-        input.value = formatRangeLabel(start, end);
+        checkinHidden.value = _drpFormatDateISO(start);
+        checkoutHidden.value = _drpFormatDateISO(end);
+        input.value = _drpFormatRangeLabel(start, end, inputLang);
         emitRangeChange();
       },
-      onReady: (_selectedDates: Date[], _dateStr: string, instance: { setDate: (dates: Date[], triggerChange?: boolean) => void }) => {
-        // Respetar valores existentes (por ejemplo, cuando se sincroniza entre modo estándar y grupo).
+      onReady: function(_selectedDates, _dateStr, instance) {
+        // Store reference for same-day clear workaround
+        window._currentFlatpickrInstance = instance;
+
+        // Restore pre-existing hidden values (e.g. sync between standard ↔ group modes)
         if (checkinHidden.value && checkoutHidden.value) {
-          const start = new Date(checkinHidden.value);
-          const end = new Date(checkoutHidden.value);
-          if (!Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime())) {
+          var start = new Date(checkinHidden.value);
+          var end = new Date(checkoutHidden.value);
+          if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
             instance.setDate([start, end], true);
           }
         }
         input.dataset.flatpickrInitialized = 'true';
         emitRangeChange();
-      }
+      },
     });
-
-    if (!picker) return;
   }
+
+  // ─── Init all pickers ───────────────────────────────────────────────────────
 
   function initializeDateRangePickers() {
-    document.querySelectorAll('.date-range-input').forEach((input) => {
+    document.querySelectorAll('.date-range-input').forEach(function(input) {
       if (input instanceof HTMLInputElement) {
-        initPicker(input);
+        _drpInitPicker(input);
       }
     });
   }
 
-  window.initializeDateRangePickers = initializeDateRangePickers;
+  // ─── Dynamic loader (Bug #1 fix) ────────────────────────────────────────────
+  // Loads CSS → flatpickr.min.js → es locale in strict order via onload
+  // Guards against double-loading when multiple instances are on the page (Bug #2 fix)
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeDateRangePickers);
-  } else {
-    initializeDateRangePickers();
+  function _drpLoadAndInit() {
+    // 1. CSS — inject once
+    if (!document.getElementById('flatpickr-css')) {
+      var link = document.createElement('link');
+      link.id = 'flatpickr-css';
+      link.rel = 'stylesheet';
+      link.href = 'https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css';
+      document.head.appendChild(link);
+    }
+
+    // 2. If flatpickr is already available, go straight to init
+    if (window.flatpickr) {
+      initializeDateRangePickers();
+      return;
+    }
+
+    // 3. If a load is already in progress, queue this init call
+    if (window._flatpickrLoading) {
+      window._flatpickrQueue = window._flatpickrQueue || [];
+      window._flatpickrQueue.push(initializeDateRangePickers);
+      return;
+    }
+
+    // 4. Start loading flatpickr for the first time
+    window._flatpickrLoading = true;
+    window._flatpickrQueue = [initializeDateRangePickers];
+
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js';
+    script.onload = function() {
+      // 5. Load Spanish locale after flatpickr core is ready
+      var localeScript = document.createElement('script');
+      localeScript.src = 'https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/es.js';
+      localeScript.onload = function() {
+        window._flatpickrLoading = false;
+        var queue = window._flatpickrQueue || [];
+        window._flatpickrQueue = [];
+        queue.forEach(function(fn) { fn(); });
+      };
+      localeScript.onerror = function() {
+        // Locale failed but flatpickr core is available — init without locale
+        window._flatpickrLoading = false;
+        var queue = window._flatpickrQueue || [];
+        window._flatpickrQueue = [];
+        queue.forEach(function(fn) { fn(); });
+      };
+      document.head.appendChild(localeScript);
+    };
+    script.onerror = function() {
+      console.error('[DateRangePicker] Failed to load flatpickr from CDN.');
+      window._flatpickrLoading = false;
+      window._flatpickrQueue = [];
+    };
+    document.head.appendChild(script);
   }
 
-  document.addEventListener('astro:page-load', initializeDateRangePickers);
+  // ─── Entry points ────────────────────────────────────────────────────────────
+
+  // Expose so external code can re-trigger (kept for backward compat)
+  window.initializeDateRangePickers = initializeDateRangePickers;
+
+  // Standard page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _drpLoadAndInit);
+  } else {
+    _drpLoadAndInit();
+  }
+
+  // Astro view transitions
+  document.addEventListener('astro:page-load', _drpLoadAndInit);
 </script>

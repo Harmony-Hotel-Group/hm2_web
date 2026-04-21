@@ -5,45 +5,76 @@ interface Props {
 
 const { transparent = false } = Astro.props;
 const currentPath = Astro.url.pathname;
+const isEnglish = currentPath.startsWith('/en');
+
+const roomsLink = isEnglish ? '/en/habitaciones' : '/habitaciones';
+const gastronomyLink = isEnglish ? '/en/gastronomia' : '/gastronomia';
+const experiencesLink = isEnglish ? '/en/experiencias' : '/experiencias';
+const contactLink = isEnglish ? '/en/contacto' : '/contacto';
+const homeLink = isEnglish ? '/en' : '/';
+
+import LanguageSwitcher from '../../molecules/LanguageSwitcher.astro';
+
+const labels = {
+  es: {
+    rooms: 'Habitaciones',
+    gastronomy: 'Gastronomía',
+    experiences: 'Experiencias',
+    contact: 'Contacto',
+    book: 'Reservar',
+    bookWhatsapp: 'Reservar por WhatsApp'
+  },
+  en: {
+    rooms: 'Rooms',
+    gastronomy: 'Gastronomy',
+    experiences: 'Experiences',
+    contact: 'Contact',
+    book: 'Book Now',
+    bookWhatsapp: 'Book via WhatsApp'
+  }
+};
+
+const t = isEnglish ? labels.en : labels.es;
 ---
 
 <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent backdrop-blur-md">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-20">
-      <a href="/" class="flex items-center">
+      <a href={isEnglish ? '/en' : '/'} class="flex items-center">
         <img src="/logo.png" alt="Hotel Majestic II Logo" class="h-16 w-auto max-w-40" />
       </a>
 
       <div class="hidden md:flex items-center absolute left-1/2 transform -translate-x-1/2">
         <div class="flex items-center gap-1">
-          <a href="/habitaciones" class:list={["relative px-4 py-2 text-sm font-medium transition-all duration-300 group", currentPath === "/habitaciones" ? "text-white" : "text-white/90 hover:text-white"]}>
-            <span class="relative z-10">Habitaciones</span>
-            <span class:list={["absolute inset-0 bg-white/10 rounded-lg transition-all duration-300", currentPath === "/habitaciones" ? "opacity-100" : "opacity-0 group-hover:opacity-100"]}></span>
-            <span class:list={["absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full transition-all duration-300", currentPath === "/habitaciones" ? "bg-accent w-6" : "bg-accent w-0 group-hover:w-4"]}></span>
+          <a href={roomsLink} class:list={["relative px-4 py-2 text-sm font-medium transition-all duration-300 group", currentPath.includes('/rooms') || currentPath.includes('/habitaciones') ? "text-white" : "text-white/90 hover:text-white"]}>
+            <span class="relative z-10">{t.rooms}</span>
+            <span class:list={["absolute inset-0 bg-white/10 rounded-lg transition-all duration-300", currentPath.includes('/rooms') || currentPath.includes('/habitaciones') ? "opacity-100" : "opacity-0 group-hover:opacity-100"]}></span>
+            <span class:list={["absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full transition-all duration-300", currentPath.includes('/rooms') || currentPath.includes('/habitaciones') ? "bg-accent w-6" : "bg-accent w-0 group-hover:w-4"]}></span>
           </a>
-          <a href="/gastronomia" class:list={["relative px-4 py-2 text-sm font-medium transition-all duration-300 group", currentPath === "/gastronomia" ? "text-white" : "text-white/90 hover:text-white"]}>
-            <span class="relative z-10">Gastronomía</span>
-            <span class:list={["absolute inset-0 bg-white/10 rounded-lg transition-all duration-300", currentPath === "/gastronomia" ? "opacity-100" : "opacity-0 group-hover:opacity-100"]}></span>
-            <span class:list={["absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full transition-all duration-300", currentPath === "/gastronomia" ? "bg-accent w-6" : "bg-accent w-0 group-hover:w-4"]}></span>
+          <a href={gastronomyLink} class:list={["relative px-4 py-2 text-sm font-medium transition-all duration-300 group", currentPath.includes('/gastronomy') || currentPath.includes('/gastronomia') ? "text-white" : "text-white/90 hover:text-white"]}>
+            <span class="relative z-10">{t.gastronomy}</span>
+            <span class:list={["absolute inset-0 bg-white/10 rounded-lg transition-all duration-300", currentPath.includes('/gastronomy') || currentPath.includes('/gastronomia') ? "opacity-100" : "opacity-0 group-hover:opacity-100"]}></span>
+            <span class:list={["absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full transition-all duration-300", currentPath.includes('/gastronomy') || currentPath.includes('/gastronomia') ? "bg-accent w-6" : "bg-accent w-0 group-hover:w-4"]}></span>
           </a>
-          <a href="/experiencias" class:list={["relative px-4 py-2 text-sm font-medium transition-all duration-300 group", currentPath === "/experiencias" ? "text-white" : "text-white/90 hover:text-white"]}>
-            <span class="relative z-10">Experiencias</span>
-            <span class:list={["absolute inset-0 bg-white/10 rounded-lg transition-all duration-300", currentPath === "/experiencias" ? "opacity-100" : "opacity-0 group-hover:opacity-100"]}></span>
-            <span class:list={["absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full transition-all duration-300", currentPath === "/experiencias" ? "bg-accent w-6" : "bg-accent w-0 group-hover:w-4"]}></span>
+          <a href={experiencesLink} class:list={["relative px-4 py-2 text-sm font-medium transition-all duration-300 group", currentPath.includes('/experiences') || currentPath.includes('/experiencias') ? "text-white" : "text-white/90 hover:text-white"]}>
+            <span class="relative z-10">{t.experiences}</span>
+            <span class:list={["absolute inset-0 bg-white/10 rounded-lg transition-all duration-300", currentPath.includes('/experiences') || currentPath.includes('/experiencias') ? "opacity-100" : "opacity-0 group-hover:opacity-100"]}></span>
+            <span class:list={["absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full transition-all duration-300", currentPath.includes('/experiences') || currentPath.includes('/experiencias') ? "bg-accent w-6" : "bg-accent w-0 group-hover:w-4"]}></span>
           </a>
-          <a href="/contacto" class:list={["relative px-4 py-2 text-sm font-medium transition-all duration-300 group", currentPath === "/contacto" ? "text-white" : "text-white/90 hover:text-white"]}>
-            <span class="relative z-10">Contacto</span>
-            <span class:list={["absolute inset-0 bg-white/10 rounded-lg transition-all duration-300", currentPath === "/contacto" ? "opacity-100" : "opacity-0 group-hover:opacity-100"]}></span>
-            <span class:list={["absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full transition-all duration-300", currentPath === "/contacto" ? "bg-accent w-6" : "bg-accent w-0 group-hover:w-4"]}></span>
+          <a href={contactLink} class:list={["relative px-4 py-2 text-sm font-medium transition-all duration-300 group", currentPath.includes('/contact') || currentPath.includes('/contacto') ? "text-white" : "text-white/90 hover:text-white"]}>
+            <span class="relative z-10">{t.contact}</span>
+            <span class:list={["absolute inset-0 bg-white/10 rounded-lg transition-all duration-300", currentPath.includes('/contact') || currentPath.includes('/contacto') ? "opacity-100" : "opacity-0 group-hover:opacity-100"]}></span>
+            <span class:list={["absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full transition-all duration-300", currentPath.includes('/contact') || currentPath.includes('/contacto') ? "bg-accent w-6" : "bg-accent w-0 group-hover:w-4"]}></span>
           </a>
         </div>
       </div>
 
-      <div class="hidden md:block">
-        <a href="/contacto" class="inline-flex items-center bg-accent hover:bg-accent-dark text-white font-bold py-2 px-5 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-accent/30 transform hover:-translate-y-0.5">
-          Reservar
-        </a>
-      </div>
+<div class="hidden md:flex items-center gap-3">
+  <a href={contactLink} class="inline-flex items-center bg-accent hover:bg-accent-dark text-white font-bold py-2 px-5 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-accent/30 transform hover:-translate-y-0.5">
+    {t.book}
+  </a>
+  <LanguageSwitcher />
+</div>
 
       <button id="mobile-menu-btn" class="md:hidden p-2 text-white hover:text-accent transition-colors" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -55,11 +86,11 @@ const currentPath = Astro.url.pathname;
 
   <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 shadow-lg" role="menu">
     <div class="px-4 py-4 space-y-3">
-      <a href="/habitaciones" class="block py-2 text-text hover:text-primary font-medium border-b border-gray-100" role="menuitem">Habitaciones</a>
-      <a href="/gastronomia" class="block py-2 text-text hover:text-primary font-medium border-b border-gray-100" role="menuitem">Gastronomía</a>
-      <a href="/experiencias" class="block py-2 text-text hover:text-primary font-medium border-b border-gray-100" role="menuitem">Experiencias</a>
-      <a href="/contacto" class="block py-2 text-text hover:text-primary font-medium" role="menuitem">Contacto</a>
-      <a href="https://wa.me/593980098757" target="_blank" rel="noopener noreferrer" class="block w-full text-center bg-accent hover:bg-accent-dark text-white font-bold py-3 px-4 rounded-lg mt-4">Reservar por WhatsApp</a>
+      <a href={roomsLink} class="block py-2 text-text hover:text-primary font-medium border-b border-gray-100" role="menuitem">{t.rooms}</a>
+      <a href={gastronomyLink} class="block py-2 text-text hover:text-primary font-medium border-b border-gray-100" role="menuitem">{t.gastronomy}</a>
+      <a href={experiencesLink} class="block py-2 text-text hover:text-primary font-medium border-b border-gray-100" role="menuitem">{t.experiences}</a>
+      <a href={contactLink} class="block py-2 text-text hover:text-primary font-medium" role="menuitem">{t.contact}</a>
+      <a href="https://wa.me/593980098757" target="_blank" rel="noopener noreferrer" class="block w-full text-center bg-accent hover:bg-accent-dark text-white font-bold py-3 px-4 rounded-lg mt-4">{t.bookWhatsapp}</a>
     </div>
   </div>
 </nav>

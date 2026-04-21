@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Switch Test</title>
+    <style>
+        .language-switcher {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: sans-serif;
+            margin: 20px;
+        }
+        .language-switcher button {
+            padding: 8px 16px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .language-switcher button.active {
+            background: #007bff;
+            color: white;
+        }
+        #status {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Language Switch Test</h1>
+    
+    <div class="language-switcher">
+        <span>Language:</span>
+        <button id="es-btn">ES</button>
+        <button id="en-btn">EN</button>
+    </div>
+    
+    <div id="status">
+        <p>Current language: <span id="current-lang">Checking...</span></p>
+        <p>Local storage lang: <span id="storage-lang">Checking...</span></p>
+    </div>
+
+    <script>
+        // Simple language switcher implementation for testing
+        const AVAILABLE_LANGUAGES = ['es', 'en'];
+        const DEFAULT_LANGUAGE = 'es';
+        
+        function getCurrentLanguage() {
+            // Check localStorage first
+            const storedLang = localStorage.getItem('i18next_lang');
+            if (storedLang && AVAILABLE_LANGUAGES.includes(storedLang)) {
+                return storedLang;
+            }
+            
+            // Check URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlLang = urlParams.get('lang');
+            if (urlLang && AVAILABLE_LANGUAGES.includes(urlLang)) {
+                return urlLang;
+            }
+            
+            // Check browser language
+            const browserLang = navigator.language.split('-')[0];
+            if (browserLang && AVAILABLE_LANGUAGES.includes(browserLang)) {
+                return browserLang;
+            }
+            
+            // Default fallback
+            return DEFAULT_LANGUAGE;
+        }
+        
+        function setLanguage(lang) {
+            if (!AVAILABLE_LANGUAGES.includes(lang)) {
+                console.warn(`Warning: Language '${lang}' is not supported.`);
+                return;
+            }
+            
+            // Persist in localStorage
+            localStorage.setItem('i18next_lang', lang);
+            
+            // Update HTML lang attribute
+            document.documentElement.lang = lang;
+            
+            // Update UI
+            updateLanguageUI();
+        }
+        
+        function updateLanguageUI() {
+            const currentLang = getCurrentLanguage();
+            document.getElementById('current-lang').textContent = currentLang;
+            document.getElementById('storage-lang').textContent = localStorage.getItem('i18next_lang') || 'not set';
+            
+            // Update button states
+            document.getElementById('es-btn').classList.toggle('active', currentLang === 'es');
+            document.getElementById('en-btn').classList.toggle('active', currentLang === 'en');
+        }
+        
+        // Event listeners
+        document.getElementById('es-btn').addEventListener('click', () => {
+            setLanguage('es');
+        });
+        
+        document.getElementById('en-btn').addEventListener('click', () => {
+            setLanguage('en');
+        });
+        
+        // Initial load
+        updateLanguageUI();
+    </script>
+</body>
+</html>

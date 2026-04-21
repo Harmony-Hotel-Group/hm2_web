@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
+
 // https://astro.build/config
 export default defineConfig({
   integrations: [tailwind()],
@@ -16,7 +17,8 @@ export default defineConfig({
         '@styles': '/src/styles',
         '@layouts': '/src/layouts',
         '@pages': '/src/pages',
-        '@data': '/src/data'
+        '@data': '/src/data',
+        '@i18n': '/src/i18n'
       }
     }
   }

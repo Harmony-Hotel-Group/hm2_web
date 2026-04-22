@@ -8,7 +8,10 @@
 import esTranslations from './es.json';
 import enTranslations from './en.json';
 
-type TranslationObject = Record<string, string | TranslationObject>;
+interface TranslationNode {
+  [key: string]: string | TranslationNode;
+}
+type TranslationObject = TranslationNode;
 export type SupportedLang = 'en' | 'es';
 export type Language = SupportedLang;
 
@@ -16,8 +19,8 @@ export const DEFAULT_LANG: SupportedLang = 'es';
 export const SUPPORTED_LANGS: readonly SupportedLang[] = ['es', 'en'] as const;
 
 const translationsMap: Record<SupportedLang, TranslationObject> = {
-  es: esTranslations as TranslationObject,
-  en: enTranslations as TranslationObject
+  es: esTranslations as unknown as TranslationObject,
+  en: enTranslations as unknown as TranslationObject
 };
 
 /**

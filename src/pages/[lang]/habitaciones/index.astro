@@ -239,8 +239,8 @@ const subtitle = isEn ? 'Find the perfect space for your stay in Cuenca' : 'Encu
 </Layout>
 
 <script>
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const roomCards = document.querySelectorAll('.card');
+  const filterBtns = document.querySelectorAll<HTMLElement>('.filter-btn');
+  const roomCards = document.querySelectorAll<HTMLElement>('.card');
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -255,9 +255,9 @@ const subtitle = isEn ? 'Find the perfect space for your stay in Cuenca' : 'Encu
       
       roomCards.forEach(card => {
         if (filter === 'all' || card.classList.contains(filter)) {
-          (card as HTMLElement).style.display = 'block';
+          card.style.display = 'block';
         } else {
-          (card as HTMLElement).style.display = 'none';
+          card.style.display = 'none';
         }
       });
     });

@@ -253,7 +253,7 @@ const restaurantHours = isEn ? '7:00 - 22:00' : '7:00 - 22:00';
 </Layout>
 
 <script>
-  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const form = document.getElementById('contact-form') as unknown as HTMLFormElement;
   
   if (form) {
     form.addEventListener('submit', (e) => {

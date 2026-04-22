@@ -194,8 +194,8 @@ const toursBtn = isEn ? 'Ask about Tours' : 'Consultar Tours';
 </Layout>
 
 <script>
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const cards = document.querySelectorAll('.experience-card');
+  const filterBtns = document.querySelectorAll<HTMLElement>('.filter-btn');
+  const cards = document.querySelectorAll<HTMLElement>('.experience-card');
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -211,9 +211,9 @@ const toursBtn = isEn ? 'Ask about Tours' : 'Consultar Tours';
       cards.forEach(card => {
         const category = card.getAttribute('data-category');
         if (filter === 'all' || category === filter) {
-          (card as HTMLElement).style.display = 'block';
+          card.style.display = 'block';
         } else {
-          (card as HTMLElement).style.display = 'none';
+          card.style.display = 'none';
         }
       });
     });

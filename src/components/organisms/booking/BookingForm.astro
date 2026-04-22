@@ -492,10 +492,10 @@ const fieldControlClass =
     setGroupMode(false);
   });
 
-  form?.addEventListener('date-range:change', (e) => {
-    console.log('📡 BookingForm caught date-range:change:', e.detail);
+  form?.addEventListener('date-range:change', ((e: Event) => {
+    console.log('📡 BookingForm caught date-range:change:', (e as CustomEvent).detail);
     syncExtrasVisibility();
-  });
+  }) as EventListener);
   console.log('🔗 BookingForm listeners attached');
   syncExtrasVisibility();
   renderChildrenAgeInputs();

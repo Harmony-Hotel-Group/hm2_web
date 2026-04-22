@@ -15,6 +15,8 @@ const homeLink = isEnglish ? '/en' : '/';
 
 import LanguageSwitcher from '../../molecules/LanguageSwitcher.astro';
 
+const bookLink = isEnglish ? '/en/reservar' : '/reservar';
+
 const labels = {
   es: {
     rooms: 'Habitaciones',
@@ -70,7 +72,10 @@ const t = isEnglish ? labels.en : labels.es;
       </div>
 
 <div class="hidden md:flex items-center gap-3">
-  <a href={contactLink} class="inline-flex items-center bg-accent hover:bg-accent-dark text-white font-bold py-2 px-5 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-accent/30 transform hover:-translate-y-0.5">
+  <a href={bookLink} class="inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-white font-bold py-2 px-5 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-accent/30 transform hover:-translate-y-0.5">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    </svg>
     {t.book}
   </a>
   <LanguageSwitcher />
@@ -90,7 +95,12 @@ const t = isEnglish ? labels.en : labels.es;
       <a href={gastronomyLink} class="block py-2 text-text hover:text-primary font-medium border-b border-gray-100" role="menuitem">{t.gastronomy}</a>
       <a href={experiencesLink} class="block py-2 text-text hover:text-primary font-medium border-b border-gray-100" role="menuitem">{t.experiences}</a>
       <a href={contactLink} class="block py-2 text-text hover:text-primary font-medium" role="menuitem">{t.contact}</a>
-      <a href="https://wa.me/593980098757" target="_blank" rel="noopener noreferrer" class="block w-full text-center bg-accent hover:bg-accent-dark text-white font-bold py-3 px-4 rounded-lg mt-4">{t.bookWhatsapp}</a>
+      <a href={bookLink} class="block w-full text-center bg-accent hover:bg-accent-dark text-white font-bold py-3 px-4 rounded-lg mt-4 flex items-center justify-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        {t.book}
+      </a>
     </div>
   </div>
 </nav>

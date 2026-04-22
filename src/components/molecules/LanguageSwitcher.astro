@@ -1,71 +1,99 @@
 ---
 const currentPath = Astro.url.pathname;
 
-// Detect current language based on prefix
 const isEnglish = currentPath.startsWith('/en');
 const isSpanish = currentPath.startsWith('/es') || (!currentPath.startsWith('/en') && !currentPath.startsWith('/es'));
 
 function getUrlForLang(lang: string): string {
   const path = currentPath;
-  
-  // Remove any existing language prefix
   const pathWithoutLang = path.replace(/^\/(es|en)/, '') || '/';
-  
+
   if (lang === 'es') {
-    // Spanish: no prefix (except for root)
     return pathWithoutLang === '/' ? '/' : pathWithoutLang;
   }
-  
   if (lang === 'en') {
-    // English: add /en prefix
     return `/en${pathWithoutLang === '/' ? '' : pathWithoutLang}`;
   }
-  
   return path;
 }
 
 const esUrl = getUrlForLang('es');
 const enUrl = getUrlForLang('en');
+
+const currentFlagSrc = isEnglish ? 'https://flagcdn.com/w40/us.png' : 'https://flagcdn.com/w40/es.png';
+const currentFlagAlt = isEnglish ? 'United States flag' : 'Spain flag';
+const currentName = isEnglish ? 'English' : 'Español';
 ---
 
 <div class="relative inline-flex items-center" id="lang-switcher">
-  <button 
-    class="flex items-center space-x-2 px-3 py-1 text-sm font-medium text-white hover:text-accent transition-colors"
+  <button
+    class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-white hover:text-accent transition-colors rounded-lg hover:bg-white/10"
     id="lang-switcher-btn"
     type="button"
     aria-haspopup="listbox"
     aria-expanded="false"
+    aria-label="Seleccionar idioma"
   >
-    <span class="uppercase">{isEnglish ? 'EN' : 'ES'}</span>
-    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    <!-- Flag: always visible -->
+    <img
+      src={currentFlagSrc}
+      alt={currentFlagAlt}
+      width="24"
+      height="16"
+      class="rounded-sm object-cover shadow-sm"
+      style="width:24px;height:16px"
+    />
+    <!-- Full name: hidden on small screens, visible on md+ -->
+    <span class="hidden md:inline text-sm font-medium">{currentName}</span>
+    <!-- Chevron: hidden on small screens -->
+    <svg class="hidden md:block h-3.5 w-3.5 opacity-70" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
     </svg>
   </button>
-  
-  <div 
+
+  <div
     id="lang-switcher-menu"
-    class="hidden absolute right-0 mt-2 w-32 origin-top-right rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-50"
-    role="menu"
+    class="hidden absolute right-0 top-full mt-2 w-44 origin-top-right rounded-xl shadow-xl py-1.5 bg-white ring-1 ring-black/10 z-50 overflow-hidden"
+    role="listbox"
+    aria-label="Idiomas disponibles"
   >
     <a
       href={esUrl}
       class:list={[
-        "block px-4 py-2 text-sm hover:bg-gray-100 transition-colors",
-        !isEnglish ? "font-medium text-primary" : "text-gray-700"
+        "flex items-center gap-3 px-4 py-2.5 text-sm transition-colors",
+        !isEnglish
+          ? "font-semibold text-primary bg-primary/5"
+          : "text-gray-700 hover:bg-gray-50"
       ]}
-      role="menuitem"
+      role="option"
+      aria-selected={!isEnglish}
     >
-      Español
+      <img src="https://flagcdn.com/w40/es.png" alt="Spain flag" width="24" height="16" class="rounded-sm object-cover shadow-sm flex-shrink-0" style="width:24px;height:16px" />
+      <span>Español</span>
+      {!isEnglish && (
+        <svg class="ml-auto h-4 w-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+        </svg>
+      )}
     </a>
     <a
       href={enUrl}
       class:list={[
-        "block px-4 py-2 text-sm hover:bg-gray-100 transition-colors",
-        isEnglish ? "font-medium text-primary" : "text-gray-700"
+        "flex items-center gap-3 px-4 py-2.5 text-sm transition-colors",
+        isEnglish
+          ? "font-semibold text-primary bg-primary/5"
+          : "text-gray-700 hover:bg-gray-50"
       ]}
-      role="menuitem"
+      role="option"
+      aria-selected={isEnglish}
     >
-      English
+      <img src="https://flagcdn.com/w40/us.png" alt="United States flag" width="24" height="16" class="rounded-sm object-cover shadow-sm flex-shrink-0" style="width:24px;height:16px" />
+      <span>English</span>
+      {isEnglish && (
+        <svg class="ml-auto h-4 w-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+        </svg>
+      )}
     </a>
   </div>
 </div>
@@ -74,7 +102,7 @@ const enUrl = getUrlForLang('en');
   const button = document.getElementById('lang-switcher-btn');
   const menu = document.getElementById('lang-switcher-menu');
   const container = document.getElementById('lang-switcher');
-  
+
   if (button && menu && container) {
     button.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -82,11 +110,19 @@ const enUrl = getUrlForLang('en');
       button.setAttribute('aria-expanded', String(!isExpanded));
       menu.classList.toggle('hidden', isExpanded);
     });
-    
+
     document.addEventListener('click', (e) => {
       if (!container.contains(e.target as Node)) {
         button.setAttribute('aria-expanded', 'false');
         menu.classList.add('hidden');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        button.setAttribute('aria-expanded', 'false');
+        menu.classList.add('hidden');
+        button.focus();
       }
     });
   }

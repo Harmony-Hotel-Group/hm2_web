@@ -5,6 +5,7 @@ import BookingForm from '@organisms/booking/BookingForm.astro';
 import RoomCard from '@organisms/cards/RoomCard.astro';
 import TestimonialCard from '@organisms/cards/TestimonialCard.astro';
 import ExperienceCard from '@organisms/cards/ExperienceCard.astro';
+import { getTranslations } from '@i18n/translation';
 
 export function getStaticPaths() {
   return [
@@ -15,87 +16,7 @@ export function getStaticPaths() {
 const { lang } = Astro.params;
 const currentLang = lang || 'es';
 
-const t = (key: string) => {
-  const translations: Record<string, Record<string, string>> = {
-    es: {
-      heroTitle: 'Hotel Majestic II',
-      heroSubtitle: 'Experimenta la elegancia colonial en el corazón de Cuenca. Donde la historia meets la comodidad moderna.',
-      cta: 'Reservar Ahora',
-      servicesBtn: 'Ver Servicios',
-      servicesTitle: 'Nuestros Servicios',
-      servicesSubtitle: 'Disfruta de comodidades modernas mientras te sumerges en la esencia colonial de Cuenca',
-      wifiTitle: 'WiFi Gratis',
-      wifiDesc: 'Conexión de alta velocidad en todas las áreas del hotel',
-      breakfastTitle: 'Desayuno incluido',
-      breakfastDesc: 'Delicioso desayuno tipo buffet con opciones locales e internacionales',
-      parkingTitle: 'Parqueadero',
-      parkingDesc: 'Estacionamiento privado vigilado las 24 horas',
-      conciergeTitle: 'Concierge',
-      conciergeDesc: 'Asistencia personalizada para tours, transporte y recomendaciones',
-      roomsTitle: 'Habitaciones Destacadas',
-      roomsSubtitle: 'Encuentra el espacio perfecto para tu estancia en Cuenca',
-      viewAllRooms: 'Ver Todas las Habitaciones',
-      aboutTitle: 'Historia y Elegancia Colonial',
-      aboutDesc: 'Ubicado en el corazón colonial de Cuenca, Hotel Majestic II combina la arquitectura histórica del siglo XIX con comodidades modernas.',
-      aboutGroup: 'Formamos parte de Hospitality & Hotels Group, una cadena hotelera comprometida con la excelencia.',
-      location: 'Ubicación',
-      locationValue: 'Centro Histórico',
-      rating: '4.8/5 en Google',
-      contactUs: 'Contáctanos',
-      experiencesTitle: 'Descubre Cuenca',
-      experiencesSubtitle: 'Explora los tesoros culturales y turísticos que rodean nuestro hotel',
-      viewAllExperiences: 'Ver Todas las Experiencias',
-      testimonialsTitle: 'Lo que dicen nuestros huéspedes',
-      testimonialsSubtitle: 'Testimonios de quienes han experimentado la hospitalidad del Hotel Majestic II',
-      galleryTitle: 'Galería',
-      gallerySubtitle: 'Un vistazo a la belleza de nuestro hotel y la ciudad',
-      ctaTitle: '¿Listo para vivir la experiencia Majestic?',
-      ctaDesc: 'Resuelve ahora y vivirás la magia colonial de Cuenca en el corazón de la ciudad.',
-      whatsapp: 'Reservar por WhatsApp',
-      email: 'Contactar por Email',
-      yearsOfExcellence: '10+Años deexcelencia'
-    },
-    en: {
-      heroTitle: 'Hotel Majestic II',
-      heroSubtitle: 'Experience colonial elegance in the heart of Cuenca. Where history meets modern comfort.',
-      cta: 'Book Now',
-      servicesBtn: 'View Services',
-      servicesTitle: 'Our Services',
-      servicesSubtitle: 'Enjoy modern amenities while immersing yourself in the colonial essence of Cuenca',
-      wifiTitle: 'Free WiFi',
-      wifiDesc: 'High-speed internet connection in all hotel areas',
-      breakfastTitle: 'Breakfast Included',
-      breakfastDesc: 'Delicious buffet breakfast with local and international options',
-      parkingTitle: 'Parking',
-      parkingDesc: 'Private guarded parking 24 hours',
-      conciergeTitle: 'Concierge',
-      conciergeDesc: 'Personalized assistance for tours, transport and recommendations',
-      roomsTitle: 'Featured Rooms',
-      roomsSubtitle: 'Find the perfect space for your stay in Cuenca',
-      viewAllRooms: 'View All Rooms',
-      aboutTitle: 'History and Colonial Elegance',
-      aboutDesc: 'Located in the colonial heart of Cuenca, Hotel Majestic II combines 19th-century historical architecture with modern amenities.',
-      aboutGroup: 'We are part of Hospitality & Hotels Group, a hotel chain committed to service excellence.',
-      location: 'Location',
-      locationValue: 'Historic Center',
-      rating: '4.8/5 on Google',
-      contactUs: 'Contact Us',
-      experiencesTitle: 'Discover Cuenca',
-      experiencesSubtitle: 'Explore the cultural and tourist treasures surrounding our hotel',
-      viewAllExperiences: 'View All Experiences',
-      testimonialsTitle: 'What Our Guests Say',
-      testimonialsSubtitle: 'Testimonials from those who have experienced the hospitality of Hotel Majestic II',
-      galleryTitle: 'Gallery',
-      gallerySubtitle: 'A glimpse into the beauty of our hotel and the city',
-      ctaTitle: 'Ready to experience Majestic?',
-      ctaDesc: 'Book now and experience the colonial magic of Cuenca in the heart of the city.',
-      whatsapp: 'Book via WhatsApp',
-      email: 'Contact via Email',
-      yearsOfExcellence: '10+Years ofexcellence'
-    }
-  };
-  return translations[currentLang]?.[key] || key;
-};
+const t = getTranslations(currentLang);
 
 const roomLink = currentLang === 'en' ? '/en/habitaciones' : '/habitaciones';
 const experienciasLink = currentLang === 'en' ? '/en/experiencias' : '/experiencias';
@@ -128,23 +49,23 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
         </div>
         
         <h1 class="animate-slide-up font-display text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-          {t('heroTitle')}
+          {t('home.title')}
         </h1>
         
         <p class="animate-slide-up animate-delay-100 font-accent text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
-          {t('heroSubtitle')}
+          {t('home.subtitle')}
         </p>
 
         <div class="animate-slide-up animate-delay-200 flex flex-col sm:flex-row items-center justify-center gap-4">
           <a href={roomLink} class="btn-accent text-lg px-8 py-4">
-            {t('cta')}
+            {t('home.hero.cta')}
           </a>
           <a href="#servicios" class="inline-flex items-center justify-center border-2 border-white text-white hover:bg-white hover:text-primary font-bold py-4 px-8 rounded-lg transition-all duration-300 text-lg">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            {t('servicesBtn')}
+            {t('home.hero.services')}
           </a>
         </div>
       </div>
@@ -169,9 +90,9 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
   <section id="servicios" class="py-20 bg-background-warm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
-        <h2 class="section-title">{t('servicesTitle')}</h2>
+        <h2 class="section-title">{t('home.services.title')}</h2>
         <p class="section-subtitle mx-auto mt-4">
-          {t('servicesSubtitle')}
+          {t('home.services.subtitle')}
         </p>
       </div>
 
@@ -184,8 +105,8 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4l4 4m0 0l4-4m-4 4v12" />
             </svg>
           </div>
-          <h3 class="font-display text-xl font-bold text-primary mb-2">{t('wifiTitle')}</h3>
-          <p class="text-text-light">{t('wifiDesc')}</p>
+          <h3 class="font-display text-xl font-bold text-primary mb-2">{t('home.services.wifi.title')}</h3>
+          <p class="text-text-light">{t('home.services.wifi.description')}</p>
         </div>
 
         <!-- Desayuno -->
@@ -195,8 +116,8 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0-1H8m4 0h4" />
             </svg>
           </div>
-          <h3 class="font-display text-xl font-bold text-primary mb-2">{t('breakfastTitle')}</h3>
-          <p class="text-text-light">{t('breakfastDesc')}</p>
+          <h3 class="font-display text-xl font-bold text-primary mb-2">{t('home.services.breakfast.title')}</h3>
+          <p class="text-text-light">{t('home.services.breakfast.description')}</p>
         </div>
 
         <!-- Estacionamiento -->
@@ -206,8 +127,8 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 8v-8a2 2 0 00-2-2H8a2 2 0 00-2 2v8" />
             </svg>
           </div>
-          <h3 class="font-display text-xl font-bold text-primary mb-2">{t('parkingTitle')}</h3>
-          <p class="text-text-light">{t('parkingDesc')}</p>
+          <h3 class="font-display text-xl font-bold text-primary mb-2">{t('home.services.parking.title')}</h3>
+          <p class="text-text-light">{t('home.services.parking.description')}</p>
         </div>
 
         <!-- Conserjería -->
@@ -217,8 +138,8 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 14.121A3 3 0 0112 14m0 0l2.121 2.121a3 3 0 104.243 4.243m0-8.243l-2.121-2.121a3 3 0 00-4.243 0M16 16l-4-4m0 0l4-4m-4 4h8" />
             </svg>
           </div>
-          <h3 class="font-display text-xl font-bold text-primary mb-2">{t('conciergeTitle')}</h3>
-          <p class="text-text-light">{t('conciergeDesc')}</p>
+          <h3 class="font-display text-xl font-bold text-primary mb-2">{t('home.services.concierge.title')}</h3>
+          <p class="text-text-light">{t('home.services.concierge.description')}</p>
         </div>
       </div>
     </div>
@@ -228,9 +149,9 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
   <section id="habitaciones" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
-        <h2 class="section-title">{t('roomsTitle')}</h2>
+        <h2 class="section-title">{t('home.rooms.title')}</h2>
         <p class="section-subtitle mx-auto mt-4">
-          {t('roomsSubtitle')}
+          {t('home.rooms.subtitle')}
         </p>
       </div>
 
@@ -271,7 +192,7 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
 
       <div class="text-center mt-12">
         <a href={roomLink} class="btn-outline">
-          {t('viewAllRooms')}
+          {t('home.rooms.viewAll')}
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
@@ -291,18 +212,18 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
             class="rounded-xl shadow-2xl"
           />
           <div class="absolute -bottom-6 -right-6 bg-accent text-white p-6 rounded-xl shadow-xl hidden md:block">
-            <div class="text-3xl font-display font-bold">{t('yearsOfExcellence')}</div>
+            <div class="text-3xl font-display font-bold">{t('home.yearsOfExcellence')}</div>
           </div>
         </div>
 
         <div>
           <span class="text-accent font-accent text-lg tracking-widest uppercase">{currentLang === 'en' ? 'About Us' : 'Sobre Nosotros'}</span>
-          <h2 class="section-title mt-2">{t('aboutTitle')}</h2>
+          <h2 class="section-title mt-2">{t('home.about.title')}</h2>
           <p class="text-text-light text-lg leading-relaxed mb-6">
-            {t('aboutDesc')}
+            {t('home.about.description')}
           </p>
           <p class="text-text-light text-lg leading-relaxed mb-8">
-            {t('aboutGroup')}
+            {t('home.about.group')}
           </p>
 
           <div class="grid grid-cols-2 gap-6 mb-8">
@@ -312,8 +233,8 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
               <div>
-                <div class="font-display font-bold text-lg text-primary">{t('location')}</div>
-                <div class="text-text-light text-sm">{t('locationValue')}</div>
+                <div class="font-display font-bold text-lg text-primary">{t('home.about.location')}</div>
+                <div class="text-text-light text-sm">{t('home.about.locationValue')}</div>
               </div>
             </div>
             <div class="flex items-center">
@@ -322,13 +243,13 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
               </svg>
               <div>
                 <div class="font-display font-bold text-lg text-primary">{currentLang === 'en' ? 'Rating' : 'Calificación'}</div>
-                <div class="text-text-light text-sm">{t('rating')}</div>
+                <div class="text-text-light text-sm">{t('common.ratingOnGoogle')}</div>
               </div>
             </div>
           </div>
 
           <a href={contactoLink} class="btn-primary">
-            {t('contactUs')}
+            {t('home.about.contactUs')}
           </a>
         </div>
       </div>
@@ -339,9 +260,9 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
   <section id="experiencias" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
-        <h2 class="section-title">{t('experiencesTitle')}</h2>
+        <h2 class="section-title">{t('home.experiences.title')}</h2>
         <p class="section-subtitle mx-auto mt-4">
-          {t('experiencesSubtitle')}
+          {t('home.experiences.subtitle')}
         </p>
       </div>
 
@@ -370,7 +291,7 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
 
       <div class="text-center mt-12">
         <a href={experienciasLink} class="btn-outline">
-          {t('viewAllExperiences')}
+          {t('home.experiences.viewAll')}
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
@@ -383,9 +304,9 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
   <section class="py-20 bg-background-warm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
-        <h2 class="section-title">{t('testimonialsTitle')}</h2>
+        <h2 class="section-title">{t('home.testimonials.title')}</h2>
         <p class="section-subtitle mx-auto mt-4">
-          {t('testimonialsSubtitle')}
+          {t('home.testimonials.subtitle')}
         </p>
       </div>
 
@@ -418,9 +339,9 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
   <section class="py-20 bg-primary">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
-        <h2 class="section-title text-white">{t('galleryTitle')}</h2>
+        <h2 class="section-title text-white">{t('home.gallery.title')}</h2>
         <p class="section-subtitle mx-auto mt-4 text-white/80">
-          {t('gallerySubtitle')}
+          {t('home.gallery.subtitle')}
         </p>
       </div>
 
@@ -461,20 +382,20 @@ const contactoLink = currentLang === 'en' ? '/en/contacto' : '/contacto';
   <section class="py-20 bg-accent">
     <div class="max-w-4xl mx-auto px-4 text-center">
       <h2 class="font-display text-3xl md:text-5xl font-bold text-white mb-6">
-        {t('ctaTitle')}
+        {t('home.cta.title')}
       </h2>
       <p class="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-        {t('ctaDesc')}
+        {t('home.cta.description')}
       </p>
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
         <a href="https://wa.me/593980098757" target="_blank" class="bg-white text-accent hover:bg-gray-100 font-bold py-4 px-8 rounded-lg transition-all duration-300 text-lg">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2" viewBox="0 0 24 24" fill="currentColor">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
           </svg>
-          {t('whatsapp')}
+          {t('home.cta.whatsapp')}
         </a>
         <a href={contactoLink} class="border-2 border-white text-white hover:bg-white hover:text-accent font-bold py-4 px-8 rounded-lg transition-all duration-300 text-lg">
-          {t('email')}
+          {t('home.cta.email')}
         </a>
       </div>
     </div>

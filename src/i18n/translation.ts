@@ -124,7 +124,5 @@ export function createTranslations(lang: string) {
   };
 }
 
-// Alias directo para obtener la función de traducción
-export function Translations(lang: string) {
-  return createTranslations(lang);
-}
+// Alias for simpler API
+export { createTranslations as getTranslations };

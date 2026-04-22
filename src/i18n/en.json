@@ -92,9 +92,10 @@
       "title": "Ready to experience Majestic?",
       "description": "Book now and experience the colonial magic of Cuenca in the heart of the city. Our team is ready to assist you.",
       "whatsapp": "Book via WhatsApp",
-      "email": "Contact via Email"
-    }
-  },
+       "email": "Contact via Email"
+     },
+     "yearsOfExcellence": "10+ Years of excellence"
+   },
   "rooms": {
     "title": "Our Rooms",
     "subtitle": "Discover the perfect space for your stay in Cuenca",

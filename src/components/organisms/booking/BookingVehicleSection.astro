@@ -61,6 +61,15 @@ const vehicleTypes = [
   let vehicleCount = 0;
   const maxVehicles = 6;
 
+  // Función para guardar estado de vehículos (llamada desde BookingForm)
+  const saveVehicleState = () => {
+    const form = document.getElementById('booking-form');
+    if (!form) return;
+    
+    const event = new CustomEvent('form:save', { detail: { source: 'vehicle' } });
+    form.dispatchEvent(event);
+  };
+
   function addVehicle() {
     if (vehicleCount >= maxVehicles || !template) return;
     
@@ -71,6 +80,10 @@ const vehicleTypes = [
       const elements = item.querySelectorAll('select, input') as NodeListOf<HTMLInputElement | HTMLSelectElement>;
       elements.forEach((htmlEl) => {
         htmlEl.name = htmlEl.name + vehicleCount;
+        
+        // Agregar listeners para guardar cambios
+        htmlEl.addEventListener('change', saveVehicleState);
+        htmlEl.addEventListener('input', saveVehicleState);
       });
     }
     
@@ -81,6 +94,7 @@ const vehicleTypes = [
       item.querySelector('.remove-vehicle')?.addEventListener('click', () => {
         item.remove();
         vehicleCount--;
+        saveVehicleState();
       });
     }
   }

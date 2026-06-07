@@ -1,4 +1,6 @@
 ---
+import { getTranslations } from '@i18n/translation';
+
 interface Props {
   title: string;
   price: number;
@@ -23,11 +25,17 @@ const {
   popular = false 
 } = Astro.props;
 
+const currentPath = Astro.url.pathname;
+const currentLang = currentPath.startsWith('/en') ? 'en' : 'es';
+const t = getTranslations(currentLang);
+
 const categoryLabels: Record<string, string> = {
   estandar: 'Estándar',
   doble: 'Doble',
   suite: 'Suite'
 };
+
+const roomsLink = currentLang === 'en' ? '/en/habitaciones' : '/habitaciones';
 ---
 
 <article class="card group">
@@ -102,10 +110,10 @@ const categoryLabels: Record<string, string> = {
       </div>
       
       <a 
-        href={`/habitaciones#${category}`}
+        href={`${roomsLink}#${category}`}
         class="btn-accent"
       >
-        Reservar
+        {t('common.bookNow')}
       </a>
     </div>
   </div>

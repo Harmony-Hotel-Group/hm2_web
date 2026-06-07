@@ -1,19 +1,26 @@
 ---
 import "../styles/global.css";
 import Navbar from "../components/organisms/navigation/Navbar.astro";
-import LanguageSwitcher from "../components/molecules/LanguageSwitcher.astro";
 
 interface Props {
   title: string;
   description?: string;
+  image?: string;
   lang?: string;
 }
 
 const {
   title,
   description = "Hotel Majestic II - Elegancia colonial en el corazón de Cuenca, Ecuador. Hospitality & Hotels Group.",
+  image,
   lang = "es"
 } = Astro.props;
+
+const siteName = lang === 'en' ? "Majestic Hotel II" : "Hotel Majestic II";
+const finalTitle = `${title} | ${siteName}`;
+const canonicalURL = Astro.url.href;
+const ogImage = image || "/og-image.jpg";
+const twitterHandle = "@hotelmajestic";
 ---
 
 <!doctype html>
@@ -27,6 +34,26 @@ const {
       content="hotel, cuenca, ecuador, colonial, hospedaje, turismo, majestic"
     />
     <link rel="icon" type="image/svg+xml" href="/logo.png" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={finalTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(ogImage, Astro.url).href} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'es_ES'} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={finalTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, Astro.url).href} />
+    <meta name="twitter:site" content={twitterHandle} />
 
     <!-- Font imports -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -36,7 +63,7 @@ const {
       rel="stylesheet"
     />
 
-    <title>{title} | Hotel Majestic II</title>
+    <title>{finalTitle}</title>
   </head>
   <body class="bg-background text-text font-body antialiased">
     <Navbar />

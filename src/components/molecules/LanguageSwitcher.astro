@@ -1,24 +1,13 @@
 ---
+import { getUrlForLang, getCurrentLang } from '@i18n/translation';
+
 const currentPath = Astro.url.pathname;
+const currentLang = getCurrentLang(Astro.url);
 
-const isEnglish = currentPath.startsWith('/en');
-const isSpanish = currentPath.startsWith('/es') || (!currentPath.startsWith('/en') && !currentPath.startsWith('/es'));
+const esUrl = getUrlForLang('es', currentPath);
+const enUrl = getUrlForLang('en', currentPath);
 
-function getUrlForLang(lang: string): string {
-  const path = currentPath;
-  const pathWithoutLang = path.replace(/^\/(es|en)/, '') || '/';
-
-  if (lang === 'es') {
-    return pathWithoutLang === '/' ? '/' : pathWithoutLang;
-  }
-  if (lang === 'en') {
-    return `/en${pathWithoutLang === '/' ? '' : pathWithoutLang}`;
-  }
-  return path;
-}
-
-const esUrl = getUrlForLang('es');
-const enUrl = getUrlForLang('en');
+const isEnglish = currentLang === 'en';
 
 const currentFlagSrc = isEnglish ? 'https://flagcdn.com/w40/us.png' : 'https://flagcdn.com/w40/es.png';
 const currentFlagAlt = isEnglish ? 'United States flag' : 'Spain flag';
@@ -102,27 +91,72 @@ const currentName = isEnglish ? 'English' : 'Español';
   const button = document.getElementById('lang-switcher-btn');
   const menu = document.getElementById('lang-switcher-menu');
   const container = document.getElementById('lang-switcher');
+  const items = menu?.querySelectorAll('a[role="option"]');
 
   if (button && menu && container) {
+    // Toggle visibility with proper ARIA state
     button.addEventListener('click', (e) => {
       e.stopPropagation();
       const isExpanded = button.getAttribute('aria-expanded') === 'true';
       button.setAttribute('aria-expanded', String(!isExpanded));
       menu.classList.toggle('hidden', isExpanded);
+      
+      // Focus first item when opening for keyboard users
+      if (!isExpanded && items && items.length > 0) {
+        setTimeout(() => (items[0] as HTMLElement).focus(), 50);
+      }
     });
 
+    // Keyboard navigation on button
+    button.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        button.click();
+      }
+    });
+
+    // Keyboard navigation within menu
+    menu.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        button.setAttribute('aria-expanded', 'false');
+        menu.classList.add('hidden');
+        button.focus();
+      }
+      
+      if (items && items.length > 0) {
+        const current = document.activeElement;
+        const currentIndex = Array.from(items).indexOf(current as HTMLElement);
+        
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          const nextIndex = (currentIndex + 1) % items.length;
+          (items[nextIndex] as HTMLElement).focus();
+        }
+        
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          const prevIndex = (currentIndex - 1 + items.length) % items.length;
+          (items[prevIndex] as HTMLElement).focus();
+        }
+        
+        if (e.key === 'Home') {
+          e.preventDefault();
+          (items[0] as HTMLElement).focus();
+        }
+        
+        if (e.key === 'End') {
+          e.preventDefault();
+          (items[items.length - 1] as HTMLElement).focus();
+        }
+      }
+    });
+
+    // Close on click outside
     document.addEventListener('click', (e) => {
       if (!container.contains(e.target as Node)) {
         button.setAttribute('aria-expanded', 'false');
         menu.classList.add('hidden');
-      }
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        button.setAttribute('aria-expanded', 'false');
-        menu.classList.add('hidden');
-        button.focus();
       }
     });
   }
